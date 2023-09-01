@@ -14,9 +14,9 @@ function createToken(user) {
 
 function verifyAToken(req, res, next){
    try{
-        console.log("Get token from req.headers['authorization']");
+        // console.log("Get token from req.headers['authorization']");
         const token = req.headers["authorization"]
-        console.log(token);
+        // console.log(token);
         next()
    }catch(e){
         res.json({
