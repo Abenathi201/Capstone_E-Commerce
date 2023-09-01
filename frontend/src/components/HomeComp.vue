@@ -25,14 +25,22 @@
             </div>
         </div>
 
-        <div class="spring">
-            <h1>Sprong</h1>
-        </div>
-
-        <hr>
-
-        <div class="best sellers">
+        <div class="best-sellers">
+            <h6>TOP SELLING</h6>
             <h1>Best Sellers</h1>
+
+            <div class="card-container">
+
+                <div class="card">
+                    <div class="card-img">
+                        <img src="https://i.postimg.cc/7hD5Yk6y/aew1947-1-punk.png" alt="Punk">
+                    </div>
+                    <div class="desc">
+                        <h3> CM Punk Best In The World </h3>
+                        <h4> $ 89 </h4>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </template>
@@ -143,13 +151,40 @@ export default {
     color: #fff;
 }
 
-.spring{
-    background-image: url(https://i.postimg.cc/zGJnX3sQ/Frame-34.png);
-    background-repeat: no-repeat;
-    background-position: center;
-    background-size: cover;
-    width: 100vw;
-    min-height: 100vh;
+.best-sellers {
+    margin-block: 30px;
+    border-top: 2px solid gray;
+    border-bottom: 2px solid gray;
+    padding: 30px;
+}
+.best-sellers h1, h6 {
+    text-align: center;
+}
+
+.best-sellers h1 {
+    margin-top: 40px;
+}
+
+.card-container .card{
+    width: 270px;
+    height: 372px;
+}
+
+.card-img img{
+    width: 100%;
     height: 100%;
+}
+
+.card .desc {
+    text-align: center;
+}
+.card .desc h3 {
+    text-align: center;
+    font-size: 16px;
+}
+.card .desc h4 {
+    text-align: center;
+    font-size: 14px;
+    margin-top: 15px;
 }
 </style>
