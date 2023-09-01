@@ -1,21 +1,22 @@
 <template>
   <header :class="{ sticky: isSticky }">
     <div class="nav-bar">
-      <a href="#" class="logo">LOGO</a>
+      <a href="/" class="logo">LOGO</a>
 
       <div class="navigation" :class="{ active: isNavigationActive }">
         <div class="nav-items">
           <i class="uil uil-times nav-close-btn" @click="closeNavigation"></i>
-          <a href="#"><i class="uil uil-home"></i>Home</a>
-          <a href="#"><i class="uil uil-info-circle"></i>About</a>
-          <a href="#"><i class="uil uil-compass"></i>Explore</a>
-          <a href="#"><i class="uil uil-envelope"></i>Contact</a>
+          <router-link class="links" to="/"><i class="uil uil-home"></i>Home</router-link>
+          <router-link class="links" to="about">About</router-link>
+          <router-link class="links" to="products">Products</router-link>
+          <router-link class="links" to="#"><i class="uil uil-envelope"></i>Contact</router-link>
         </div>
       </div>
 
       <div class="icons">
         <i class="uil uil-search"></i>
-        <i class="uil uil-shopping-cart"></i>
+        <i class="uil uil-shopping-cart" @click="openModal"></i>
+        <ModalComp v-if="isModalVisible" @close="closeModal"></ModalComp>
         <i class="uil uil-user"></i>
       </div>
       <i class="uil uil-apps nav-menu-btn" @click="openNavigation"></i>
@@ -24,30 +25,45 @@
 </template>
 
 <script>
+import ModalComp from './ModalComp.vue';
+
 export default {
-  data() {
-    return {
-      isSticky: false,
-      isNavigationActive: false
-    };
-  },
-  methods: {
-    openNavigation() {
-      this.isNavigationActive = true;
+    components: { ModalComp },
+
+    data() {
+      return {
+        isSticky: false,
+        isNavigationActive: false,
+        isModalVisible: false,
+      };
     },
-    closeNavigation() {
-      this.isNavigationActive = false;
+  
+    methods: {
+      openNavigation() {
+        this.isNavigationActive = true;
+      },
+      closeNavigation() {
+        this.isNavigationActive = false;
+      },
+      handleScroll() {
+        this.isSticky = window.scrollY > 0;
+      },
+      openModal() {
+        console.log('Open modal clicked');
+          this.isModalVisible = true;
+        },
+      closeModal() {
+        this.isModalVisible = false;
+      }
     },
-    handleScroll() {
-      this.isSticky = window.scrollY > 0;
+  
+    mounted() {
+      window.addEventListener("scroll", this.handleScroll);
+    },
+  
+    beforeDestroy() {
+      window.removeEventListener("scroll", this.handleScroll);
     }
-  },
-  mounted() {
-    window.addEventListener("scroll", this.handleScroll);
-  },
-  beforeDestroy() {
-    window.removeEventListener("scroll", this.handleScroll);
-  }
 };
 </script>
 
@@ -111,7 +127,7 @@ header.sticky{
     text-shadow: 0 5px 25px rbga(0, 0, 0, 0.1);
 }
 
-.navigation .nav-items a{
+.navigation .nav-items .links{
     color: #fff;
     font-size: 1em;
     text-decoration: none;
