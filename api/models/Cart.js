@@ -1,52 +1,71 @@
 const db = require('../config/index');
 
-class Items {
-    // Get all products
-    getItem(req, res) {
+class Cart {
+    // Get all cart items
+    getItems(req, res) {
         const query = `
-        SELECT cartID, itemName,
-        itemURL, itemPrice, quantity
-        FROM Cart;
-        `
+        SELECT c.productID, c.quantity, p.productName, p.productPrice, p.imageURL, p.description
+        FROM Cart c
+        JOIN Products p ON c.productID = p.productID;
+        `;
         db.query(query, (err, results) => {
-            if(err) {
-                throw err
+            if (err) {
+                throw err;
             } else {
-                res.json({  status: res.statusCode, results  });
+                res.json({ status: res.statusCode, results });
             }
-        })
-    }
+        });
+    }    
 
-    // Add a product
+    // Add a product to the cart
     addItem(req, res) {
-        const data = req.body 
+        const { productID, quantity } = req.body;
         const query = `
-        INSERT INTO Cart
-        SET ?;
+        INSERT INTO Cart (productID, quantity)
+        VALUES (?, ?);
         `
-        db.query(query,[data], (err) => {
+        db.query(query, [productID, quantity], (err) => {
             if(err) {
-                throw err
+                throw err;
             } else {
-                res.json({ status: res.statusCode, msg: "Item added!" })
+                res.json({ status: res.statusCode, msg: "Product added to the cart!" });
             }
         })
     }
 
-    // Delete a product
+    // Remove a product from the cart
     deleteItem(req, res) {
+        const cartID = req.params.id;
         const query = `
         DELETE FROM Cart
-        WHERE cartID = ${req.params.id};
+        WHERE cartID = ?;
         `
-        db.query(query, (err) => {
+        db.query(query, [cartID], (err) => {
             if(err) {
-                throw err
+                throw err;
             } else {
-                res.json({ status: res.statusCode, msg: "Item deleted!" })
-            } 
+                res.json({ status: res.statusCode, msg: "Product removed from the cart!" });
+            }
+        })
+    }
+
+    // Update the quantity of a product in the cart
+    updateItem(req, res) {
+        const cartID = req.params.id;
+        const { quantity } = req.body;
+        const query = `
+        UPDATE Cart
+        SET quantity = ?
+        WHERE cartID = ?;
+        `
+        db.query(query, [quantity, cartID], (err) => {
+            if(err) {
+                throw err;
+            } else {
+                res.json({ status: res.statusCode, msg: "Cart item updated!" });
+            }
         })
     }
 }
 
-module.exports = Items;
+module.exports = Cart;

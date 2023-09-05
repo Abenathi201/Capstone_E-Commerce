@@ -1,7 +1,7 @@
 const express = require('express')
 const routes = express.Router()
 const bodyParser = require('body-parser')
-const { users, products, items } = require('../models')
+const { users, products, cart } = require('../models')
 
 /*========== Users Routes ==========*/
 
@@ -55,15 +55,20 @@ routes.delete('/products/:id', (req, res) => {
 
 /*========== Cart Routes ==========*/
 routes.get('/items', (req, res) => {
-    items.getItem(req,res)
+    cart.getItems(req, res);
 });
 
 routes.post('/add-item', bodyParser.json(), (req, res) => {
-    items.addItem(req, res)
+    cart.addItem(req, res);
+});
+
+routes.put('/items/:id', bodyParser.json(), (req, res) => {
+    cart.updateItem(req, res);
 });
 
 routes.delete('/items/:id', (req, res) => {
-    items.deleteItem(req, res)
+    cart.deleteItem(req, res);
+    
 });
 /*========== Cart Routes ==========*/
 
