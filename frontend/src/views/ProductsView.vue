@@ -7,8 +7,12 @@
             </h5>
         </div>
 
-        <div class="card-container">
+        <div class="card-container" v-if="products">
             <ProductCard :products="products" />
+        </div>
+
+        <div v-else>
+            Processing....
         </div>
     </div>
 </template>
@@ -20,7 +24,7 @@ export default {
 
     computed: {
         products() {
-            return this.$store.state.products
+            return this.$store.state.products;
         },
     },
 

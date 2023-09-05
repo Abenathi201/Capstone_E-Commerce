@@ -26,10 +26,12 @@
                 </div>
 
                 <div class="button">
-                    <button>Add To Cart</button>
+                    <button @click="addItem(product)" class="btn">Add To Cart</button>
                 </div>
             </div>
         </div>
+
+        
     </div>
 </template>
 
@@ -38,6 +40,12 @@ export default {
     computed: {
         product() {
             return this.$store.state.product;
+        }
+    },
+
+    methods: {
+        addItem(product) {
+          this.$store.dispatch("addItem", product);
         }
     },
 
@@ -57,5 +65,8 @@ export default {
     height: 899.5px;
     display: flex;
     flex-direction: column;
+}
+.btn{
+    margin-block: 100px;
 }
 </style>

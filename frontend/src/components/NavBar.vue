@@ -10,6 +10,7 @@
           <router-link class="links" to="about">About</router-link>
           <router-link class="links" to="products">Products</router-link>
           <router-link class="links" to="#"><i class="uil uil-envelope"></i>Contact</router-link>
+          <router-link class="links" to="admin">Admin</router-link>
         </div>
       </div>
 
