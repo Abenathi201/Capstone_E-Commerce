@@ -4,31 +4,6 @@
             <h1>Shopping Cart</h1>
             <h2 @click="close">X</h2>
         </div>
-
-        <!-- <div class="modal-inner">
-
-            <div class="modal-img">
-                <img src="https://i.postimg.cc/W4BDCrcz/aew2174-1-cmpunk-sting-sting.png" alt="cmpunk">
-            </div>
-
-            <div class="modal-info">
-                <div class="name">
-                    <h1>CM Punk Sting and Darby Allin Tee</h1>
-                    <h1>$15.00</h1>
-                </div>
-
-                <div class="actions">
-                    <div class="input">
-
-                    </div>
-
-                    <div class="del-btn">
-                        <i class="uil uil-trash-alt"></i>
-                    </div>
-                </div>
-            </div>
-        </div> -->
-
         <div class="modal-inner" v-for="item in items" :key="item.productID">
 
             <div class="modal-img">

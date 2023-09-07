@@ -29,6 +29,21 @@ const routes = [
     path: '/admin',
     name: 'admin',
     component: () => import(/* webpackChunkName: "about" */ '../views/AdminView.vue')
+  },
+  {
+    path: '/register',
+    name: 'register',
+    component: () => import(/* webpackChunkName: "about" */ '../components/Register.vue')
+  },
+  {
+    path: '/login',
+    name: 'login',
+    component: () => import(/* webpackChunkName: "about" */ '../components/Login.vue')
+  },
+  {
+    path: '/updateProduct/:id',
+    name: 'updateProduct',
+    component: () => import(/* webpackChunkName: "about" */ '../components/UpdateProduct.vue')
   }
 ]
 

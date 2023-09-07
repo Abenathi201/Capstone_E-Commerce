@@ -17,8 +17,9 @@
       <div class="icons">
         <i class="uil uil-search"></i>
         <i class="uil uil-shopping-cart" @click="openModal"></i>
-        <ModalComp v-if="isModalVisible" @close="closeModal"></ModalComp>
-        <i class="uil uil-user"></i>
+        <CartComp v-if="isModalVisible" @close="closeModal"></CartComp>
+        <router-link :to="{ name: 'login' }"> <i class="uil uil-user"></i> </router-link>
+        
       </div>
       <i class="uil uil-apps nav-menu-btn" @click="openNavigation"></i>
     </div>
@@ -26,10 +27,10 @@
 </template>
 
 <script>
-import ModalComp from './ModalComp.vue';
+import CartComp from './CartComp.vue';
 
 export default {
-    components: { ModalComp },
+    components: { CartComp },
 
     data() {
       return {
@@ -41,21 +42,25 @@ export default {
   
     methods: {
       openNavigation() {
-        this.isNavigationActive = true;
+          this.isNavigationActive = true;
       },
+
       closeNavigation() {
-        this.isNavigationActive = false;
+          this.isNavigationActive = false;
       },
+
       handleScroll() {
-        this.isSticky = window.scrollY > 0;
+          this.isSticky = window.scrollY > 0;
       },
+
       openModal() {
-        console.log('Open modal clicked');
+          // console.log('Open modal clicked');
           this.isModalVisible = true;
-        },
+      },
+
       closeModal() {
-        this.isModalVisible = false;
-      }
+          this.isModalVisible = false;
+      },
     },
   
     mounted() {

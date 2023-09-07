@@ -1,19 +1,58 @@
 <template>
-    <div>
-        <tbody v-for="product in products" :key="product.productID">
+    <tbody>
+        <tr v-for="product in products" :key="product.productID">
             <td><img :src="product.imageURL" :alt="product.productName"></td>
             <td>{{ product.productID }}</td>
             <td>{{ product.productName }}</td>
             <td>{{ product.productPrice }}</td>
             <td>{{ product.description }}</td>
             <td>{{ product.quantity }}</td>
-        </tbody>
-    </div>
+            <td>
+                <i class="uil uil-edit" @click="openModal"></i>
+                <!-- <UpdateProduct v-if="isModalVisible" @close="closeModal"></UpdateProduct> -->
+                <!-- <i class="uil uil-trash-alt"  @click="deleteProduct(product.productID)"></i> -->
+                <router-link :to="{ name: 'updateProduct', params: {id: product.productID} }"> Edit</router-link>
+                <i class="uil uil-trash-alt"></i>
+            </td>
+        </tr>
+    </tbody>
 </template>
 
 <script>
+import UpdateProduct from './UpdateProduct.vue';
 export default {
-    props: ["products"]
+    data() {
+      return {
+        isModalVisible: false,
+      };
+    },
+
+    props: ["products"],
+
+    components: { UpdateProduct },
+
+    methods: {
+        async deleteProduct(productID) {
+            const confirmed = confirm("Are you sure you want to delete this product?");
+            if (confirmed) {
+                try {
+                    await this.$store.dispatch("deleteProduct", productID);
+                    console.log("Product delted successfully");
+                } catch (error) {
+                    console.error("Error deleting product:", error);
+                }
+            }
+        },
+
+        openModal() {
+            console.log('Open modal clicked');
+            this.isModalVisible = true;
+        },
+
+        closeModal() {
+            this.isModalVisible = false;
+        }
+    }
 }
 </script>
 
