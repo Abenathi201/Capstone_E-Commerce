@@ -67,37 +67,38 @@ class Users{
   
     // Login with a user
     login(req, res) {
-        const { emailAdd, userPass } = req.body;
-      
-        const query = `
-          SELECT userID, firstName, lastName,
-          gender, userDOB, userRole, emailAdd,
-          userPass, profileUrl
-          FROM Users
-          WHERE emailAdd = '${emailAdd}';
-        `;
-      
-        db.query(query, async (err, result) => {
-          if (err) throw err;
-          
-          if (!result?.length) {
-            res.json({ status: res.statusCode, msg: "You provided a wrong email." });
-          } else {
-            compare(userPass, result[0].userPass, (compareErr, compareResult) => {
-              if (compareErr) throw compareErr;
+      const { emailAdd, userPass } = req.body;
+    
+      const query = `
+        SELECT userID, firstName, lastName,
+        gender, userDOB, userRole, emailAdd,
+        userPass, profileUrl
+        FROM Users
+        WHERE emailAdd = '${emailAdd}';
+      `;
+    
+      db.query(query, async (err, result) => {
+        if (err) throw err;
+    
+        if (!result?.length) {
+          res.json({ status: res.statusCode, msg: "You provided a wrong email." });
+        } else {
+          compare(userPass, result[0].userPass, (compareErr, compareResult) => {
+            if (compareErr) throw compareErr;
+    
+            if (compareResult) {
+              // const authenticated = true;
               const token = createToken({ emailAdd, userPass });
-              
-              if (compareResult) {
-
-                
-                res.json({ msg: "Logged in", token, result: result[0] });
-              } else {
-                res.json({ status: res.statusCode, msg: "Invalid password or you have not registered" });
-              }
-            });
-          }
-        });
-      }      
+    
+              res.json({ msg: "Logged in", token, result: result[0] });
+            } else {
+              res.json({ status: res.statusCode, msg: "Invalid password or you have not registered" });
+            }
+          });
+        }
+      });
+    }
+          
   
     // Update a user
     updateUser(req, res) {
