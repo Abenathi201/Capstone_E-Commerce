@@ -10,7 +10,9 @@
           <router-link class="links" to="about">About</router-link>
           <router-link class="links" to="products">Products</router-link>
           <router-link class="links" to="#"><i class="uil uil-envelope"></i>Contact</router-link>
-          <router-link class="links" to="admin">Admin</router-link>
+          <!-- <router-link class="links" to="admin">Admin</router-link> -->
+          <router-link class="links" v-if="userRole === 'admin'" to="/admin">Admin</router-link>
+          <router-link class="links" v-if="userRole === 'user'" to="/admin">Admin</router-link>
         </div>
       </div>
 
@@ -18,7 +20,8 @@
         <i class="uil uil-search"></i>
         <i class="uil uil-shopping-cart" @click="openModal"></i>
         <CartComp v-if="isModalVisible" @close="closeModal"></CartComp>
-        <router-link :to="{ name: 'login' }"> <i class="uil uil-user"></i> </router-link>
+        <router-link :to="{ name: 'login' }" v-if="!authenticated"> <i class="uil uil-user"></i> </router-link>
+        <button v-else @click="logout">Logout</button>
         
       </div>
       <i class="uil uil-apps nav-menu-btn" @click="openNavigation"></i>
@@ -38,6 +41,16 @@ export default {
         isNavigationActive: false,
         isModalVisible: false,
       };
+    },
+
+    computed: {
+        authenticated() {
+          return this.$store.state.authenticated;
+        },
+
+        userRole() {
+          return this.$store.state.userRole;
+        }
     },
   
     methods: {
@@ -61,6 +74,12 @@ export default {
       closeModal() {
           this.isModalVisible = false;
       },
+
+      logout() {
+          this.$store.dispatch("logout");
+        //   this.$router.push('/');
+          window.location.reload();
+        },
     },
   
     mounted() {
@@ -101,7 +120,8 @@ header{
     display: flex;
     justify-content: center;
     transition: 0.5s ease;
-    transition-property: height, background;
+    /* transition-property: height, background; */
+    background: #000;
 }
 
 header.sticky{
@@ -164,7 +184,7 @@ header.sticky{
     /*===== NAVIGATION MENU  =====*/
     .nav-menu-btn{
         display: block;
-        color: var(--white-color);
+        color: #fff;
         font-size: 1.5em;
         cursor: pointer;
     }

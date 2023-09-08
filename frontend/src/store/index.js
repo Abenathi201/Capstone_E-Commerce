@@ -1,6 +1,7 @@
 import { createStore } from 'vuex'
 import Swal from 'sweetalert2'
 import Cookies from "js-cookie";
+import router from '@/router';
 
 const dbLink = "http://localhost:5000/";
 
@@ -10,14 +11,14 @@ export default createStore({
     product: null,
     items: [],
     deleteProduct: null,
-    token: null,
     user: null,
     userData: null,
     userRole: null,
-    msg: null,
-    error: null,
-    regStatus: null,
-    logStatus: null,
+    token: null,
+    // regStatus: null,
+    // logStatus: null,
+    authenticated: false,
+    userRole: null,
   },
 
   mutations: {
@@ -38,26 +39,40 @@ export default createStore({
     },
 
     setDeleteItem: (state, cartID) => {
-      // Find the index of the item to be removed in the cart
       const delItem = state.items.findIndex((item) => item.cartID === cartID);
-  
       if (delItem !== -1) {
-        // Remove the item from the cart by splicing it from the array
         state.cartItems.splice(delItem, 1);
       }
     },
 
-    setDelete: (state, deleteProduct) => {
-      state.deleteProduct = deleteProduct;
+    setUser: (state, user) => {
+      state.user = user
     },
 
-    setRegStatus(state, status) {
-      state.regStatus = status;
-    },
+    setUserData(state, userData) {
+      state.userData = userData;
 
-    setLogStatus(state, status) {
-      state.logStatus = status;
+      const userDataForCookie = {
+        msg: userData.msg,
+        token: userData.token,
+        result: userData.result,
+      };
+    
+      // if (userData && userData.userRole) {
+      //   state.userRole = userData.userRole;
+        Cookies.set("userData", JSON.stringify(userDataForCookie), {
+          expires: 1, // Set the expiration time for the cookie (in days)
+          path: "/", // Set the path for which the cookie is valid
+          secure: true, // Set to true if your site is using HTTPS
+          sameSite: "None", // Set the SameSite attribute for cross-origin cookies
+        });
+      // } else {
+      //   state.userData = null;
+      //   state.userRole = null;
+      //   Cookies.remove("userData", { path: "/" });
+      // }
     },
+    
 
     setToken(state, token) {
       state.token = token;
@@ -67,37 +82,19 @@ export default createStore({
         secure: true,
         sameSite: "None",
       });
+      state.authenticated = true;
     },
 
-    setToken: (state, token) => {
-      state.token = token;
-      Cookies.set("userToken", token, {
-        expires: 1,
-        path: "/",
-        secure: true,
-        sameSite: "None",
-      });
+    setUserRole(state, userRole) {
+      state.userRole = userRole;
     },
 
-    setUser: (state, user) => {
-      state.user = user
+    setRegStatus(state, status) {
+      state.regStatus = status;
     },
 
-    setUserData(state, userData) {
-      state.userData = userData;
-      if (userData && userData.userRole) {
-        state.userRole = userData.userRole;
-        localStorage.setItem("userData", JSON.stringify(userData));
-        console.log(userData, userData.userRole);
-      } else {
-        state.userData = null;
-        state.userRole = null;
-        localStorage.removeItem("userData");
-      }
-    },
-
-    setMsg(state, msg) {
-      state.msg = msg;
+    setLogStatus(state, status) {
+      state.logStatus = status;
     },
 
     setError(state, error) {
@@ -232,33 +229,8 @@ export default createStore({
     //   }
     // },
 
-    async addItem({ commit, state }, product) {
-      try {
-        const existingProduct = state.items.find((item) => item.productID === product.productID);
-  
-        if (existingProduct) {
-          existingProduct.quantity++;
-        } else {
-          const response = await fetch(`${dbLink}add-item`, {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(product),
-          });
-  
-          if (response.ok) {
-            commit("addItem", product);
-          } else {
-            console.error('Error adding to cart:', response.statusText);
-          }
-        }
-      } catch (error) {
-
-
-        console.error('Error adding to cart:', error);
-      }
-    },
+    
+    
 
     async deleteItem({ commit }, cartID) {
       try {
@@ -332,52 +304,50 @@ export default createStore({
           body: JSON.stringify(userData),
         });
     
-        // Log the entire response from the server
-        console.log(response);
-    
         if (!response.ok) {
-          console.error(`Failed to login user. Status: ${response.status}`);
-          context.commit("setError", `Failed to login user. Status: ${response.status}`);
-          context.commit("setLogStatus", "Not logged in");
-          return { success: false, error: `Failed to login user. Status: ${response.status}` };
+          throw new Error(`Failed to login user. Status: ${response.status}`);
         }
     
         const data = await response.json();
     
-        if (data.msg === "You are providing the wrong email or password") {
-          context.commit("setError", data.msg);
-          context.commit("setLogStatus", "Not logged in");
-          return { success: false, error: data.msg };
-        }
-    
         if (data.token) {
-          localStorage.setItem("userToken", data.token);
-          localStorage.setItem("userData", JSON.stringify(data.userData));
+          const userData = {
+            msg: data.msg,
+            token: data.token,
+            result: data.result,
+          };
     
-          context.commit("setUser", data.userData);
+          // Cookies.set("userData", JSON.stringify(userData), {
+          //   expires: 1,
+          //   path: "/",
+          //   secure: true,
+          //   sameSite: "None",
+          // });
           context.commit("setToken", data.token);
-    
-          console.log("User logged in:", data.userData);
-    
-          context.commit("setLogStatus", data.message);
-    
-          return { success: data.success, token: data.token };
-        } else if (data.err) {
-          context.commit("setToken", null);
-          context.commit("setError", data.err);
-          return { success: false, error: data.err };
+          context.commit("setUserData", userData);
+          context.commit("setUserRole", data.result.userRole);
+          return data;
         } else {
-          context.commit("setError", "Unknown error during login");
-          context.commit("setLogStatus", "not logged in");
-          return { success: false, error: "Unknown error" };
+          console.error("Login failed:", data.msg);
+          return data;
         }
+    
       } catch (error) {
-        console.error("Error logging in user:", error);
-        context.commit("setError", "An error occurred while trying to log in");
-        context.commit("setLogStatus", "Not logged in");
-        return { success: false, error: "Network error" };
+        console.error('Error logging in user:', error);
+        throw error;
       }
-    },    
+    },
+
+    logout(context) {
+      context.token = null;
+      context.userData = null;
+      Cookies.remove("userToken", { path: "/" });
+      Cookies.remove("userData", { path: "/" });
+      // router.push("/")
+    },
+              
     
   }
 })
+
+// modules: {}

@@ -96,7 +96,7 @@ export default {
 </script>
 
 <style scoped>
-@import url("https://fonts.googleapis.com/css2?family=Poppins&display=swap");
+/* @import url("https://fonts.googleapis.com/css2?family=Poppins&display=swap");
 
 * {
   margin: 0;
@@ -111,7 +111,7 @@ body {
   display: grid;
   place-items: center;
   background-color: #e2e8f0;
-}
+} */
 
 p {
   font-size: 14px;
@@ -121,6 +121,10 @@ p {
 .signup-form {
   width: 480px;
   padding: 32px;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%); 
+  position: absolute;
   border-radius: 8px;
   background-color: #ffffff;
   box-shadow: 2px 4px 8px #6b728040;

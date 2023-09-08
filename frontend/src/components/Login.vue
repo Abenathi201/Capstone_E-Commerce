@@ -2,14 +2,16 @@
     <div class="signup-form">
     <div class="container">
       <div class="header">
-        <h1>Create an Account</h1>
-        <p>Get started for free!</p>
+        <h1>LogIn Below</h1>
+        <p>Get started!</p>
       </div>
+
       <form @submit.prevent="loginUser">
         <div class="input">
           <i class="fa-solid fa-envelope"></i>
           <input type="emailAdd" id="emailAdd" v-model="userInfo.emailAdd" placeholder="Email" />
         </div>
+
         <div class="input">
           <i class="fa-solid fa-lock"></i>
           <input type="password" id="userPass" v-model="userInfo.userPass" placeholder="Password" />
@@ -38,42 +40,50 @@ export default {
       },
     };
   },
+
   methods: {
-  async loginUser() {
-    try {
-      const userData = {
-        emailAdd: this.userInfo.emailAdd,
-        userPass: this.userInfo.userPass,
-      };
+    async loginUser() {
+  try {
+    const userData = {
+      emailAdd: this.userInfo.emailAdd,
+      userPass: this.userInfo.userPass,
+    };
 
-      const resp = await this.$store.dispatch("login", userData);
+    const data = await this.$store.dispatch("login", userData);
 
-      if (resp.success && resp.token) {
-        await Swal.fire({
-          icon: "success",
-          title: "Logged in Successfully",
-          text: "You are now logged in!",
-        });
-        this.$router.push("/");
-      } else {
-        const errMsg = resp.error || "Unexpected error";
-        await Swal.fire({
-          icon: "error",
-          title: "Login failed",
-          text: errMsg,
-        });
-      }
-    } catch (e) {
-      console.error("Error while logging in: ", e);
+    console.log(JSON.stringify(data, null, 2));
+
+    if (data && data.token) {
+      this.$store.commit("setToken", data.token);
+      Swal.fire({
+        icon: 'success',
+        title: 'Login Successful',
+        text: data.msg,
+      });
+    } else {
+      Swal.fire({
+        icon: 'error',
+        title: 'Login Failed',
+        text: data.msg || 'Login failed',
+      });
     }
-  },
+  } catch (error) {
+    console.error('Error logging in user:', error);
+    Swal.fire({
+      icon: 'error',
+      title: 'Error',
+      text: `Error logging in user: ${error.message}`,
+    });
+  }
+},
+
 },
 
 };
 </script>
   
   <style scoped>
-  @import url("https://fonts.googleapis.com/css2?family=Poppins&display=swap");
+  /* @import url("https://fonts.googleapis.com/css2?family=Poppins&display=swap");
   
   * {
     margin: 0;
@@ -88,7 +98,7 @@ export default {
     display: grid;
     place-items: center;
     background-color: #e2e8f0;
-  }
+  } */
   
   p {
     font-size: 14px;
@@ -98,6 +108,10 @@ export default {
   .signup-form {
     width: 480px;
     padding: 32px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%); 
+    position: absolute;
     border-radius: 8px;
     background-color: #ffffff;
     box-shadow: 2px 4px 8px #6b728040;
