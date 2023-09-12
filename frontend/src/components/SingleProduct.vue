@@ -26,7 +26,7 @@
                 </div>
 
                 <div class="button">
-                    <button @click="addItem(product)" class="btn">Add To Cart</button>
+                    <button @click="addItem(product.productID)" class="btn">Add To Cart</button>
                 </div>
             </div>
         </div>
@@ -44,9 +44,16 @@ export default {
     },
 
     methods: {
-        addItem(product) {
-          this.$store.dispatch("addItem", product);
-        }
+        addItem(productID, quantity) {
+            // console.log("Adding item to cart:", productID);
+            // console.log("Product data:", this.product);
+            // console.log("Adding item to cart:", productID);
+            this.$store.dispatch("addToCart", { productID, quantity });
+        },
+
+        // addItem(productID, quantity) {
+        //     this.$store.dispatch("addToCart", { productID, quantity });
+        // }
     },
 
     mounted() {

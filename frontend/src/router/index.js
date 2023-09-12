@@ -26,14 +26,29 @@ const routes = [
     component: () => import(/* webpackChunkName: "about" */ '../components/SingleProduct.vue')
   },
   {
+    path: '/user/:userID',
+    name: 'user',
+    component: () => import(/* webpackChunkName: "about" */ '../components/SingleUser.vue')
+  },
+  {
     path: '/admin',
     name: 'admin',
     component: () => import(/* webpackChunkName: "about" */ '../views/AdminView.vue')
   },
   {
+    path: '/cart',
+    name: 'cart',
+    component: () => import(/* webpackChunkName: "about" */ '../components/CartComp.vue')
+  },
+  {
     path: '/register',
     name: 'register',
     component: () => import(/* webpackChunkName: "about" */ '../components/Register.vue')
+  },
+  {
+    path: '/users',
+    name: 'users',
+    component: () => import(/* webpackChunkName: "about" */ '../views/UsersView.vue')
   },
   {
     path: '/login',

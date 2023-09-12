@@ -2,68 +2,111 @@
     <div class="modal">
         <div class="modal-header">
             <h1>Shopping Cart</h1>
-            <h2 @click="close">X</h2>
+            <!-- <h2 @click="close">X</h2> -->
         </div>
-        <div class="modal-inner" v-for="item in items" :key="item.productID">
-
-            <div class="modal-img">
-                <img :src="item.imageURL" :alt="item.productName">
-            </div>
-
-            <div class="modal-info">
-                <div class="name">
-                    <h1>{{ item.productName }}</h1>
-                    <h1>$ {{ item.productPrice }}</h1>
+        <div v-if="cartItems">
+            <div class="modal-inner" v-for="item in cartItems" :key="item.cartID">
+    
+                <div class="modal-img">
+                    <img :src="item.imageURL" :alt="item.productName">
                 </div>
-
-                <div class="actions">
-                    <div class="input">
-
+    
+                <div class="modal-info">
+                    <div class="name">
+                        <h1>{{ item.productName }}</h1>
+                        <h1>$ {{ item.productPrice }}</h1>
                     </div>
-
-                    <div class="del-btn">
-                        <i class="uil uil-trash-alt" @click="deleteItem(item.productID)"></i>
+    
+                    <div class="actions">
+                        <div class="input">
+                          <button @click="decreaseQuantity(item)">
+                              <i class="fas fa-minus"></i>
+                              </button>
+                              <input v-model="item.quantity" type="number" min="1">
+                              <button @click="increaseQuantity(item)">
+                              <i class="fas fa-plus"></i>
+                              </button>
+                        </div>
+    
+                        <div class="del-btn">
+                            <i class="uil uil-trash-alt" @click="deleteItem(item.cartID)"></i>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
 
-
+        <div v-else>
+            Getting cart items
+        </div>
     </div>
   </template>
 
 <script>
-export default {  
-    methods: {
-        close() {
-          this.$emit("close");
-        },
-
-        deleteItem(item) {
-          // Pass only the cartID when calling the deleteItem action
-          this.$store.dispatch("deleteItem", item);
-        }
-    },
-
+export default {
     computed: {
-        items() {
-            return this.$store.state.items;
-        }
+          cartItems() {
+        return this.$store.state.cartItems;
+      }
     },
 
-    mounted() {
-        this.$store.dispatch("getItems");
+    methods: {
+    async getUserID() {
+        const userData = JSON.parse(localStorage.getItem('userData'));
+        if (userData && userData.result && userData.result.userID) {
+          const userID = userData.result.userID;
+          await this.$store.dispatch("getCartItems", userID);
+        } else {
+          console.error('User data or userID not found in local storage');
+        }
+      },
+
+      // async updateQuantity(item) {
+      //   await this.$store.dispatch("updateCartItemQuantity", item);
+      // },
+
+      async updateQuantity(cartID, newQuantity) {
+        await this.$store.dispatch("updateCartQuantity", { cartID, quantity: newQuantity });
+      },
+
+      decreaseQuantity(item) {
+    if (item.quantity > 1) {
+      item.quantity--;
+    }
+  },
+  increaseQuantity(item) {
+    item.quantity++;
+  },
+
+      // async addToCart(productID, quantity) {
+      //   await this.$store.dispatch("addToCart", { productID, quantity });
+      // },
+
+      // async removeFromCart(cartID) {
+      //   await this.$store.dispatch("removeFromCart", cartID);
+      // },
+
+      deleteItem(cartID) {
+            console.log('Deleting item with cartID:', cartID);
+            this.$store.dispatch("removeFromCart", cartID);
+        }
+    },
+  
+    created() {
+      this.getUserID();
+      console.log("cartItems:",this.$store.state.cartItems);
+      console.log("Type of cartItems:", typeof this.$store.state.cartItems);
     }
 };
 </script>
 
 <style scoped>
 .modal {
-  position: fixed;
-  top: 0;
+  /* position: fixed; */
+  /* top: 0;
   left: 0;
-  width: 675px;
-  min-height: 1116px;
+  width: 675px; */
+  /* min-height: 1116px; */
   display: flex;
   flex-direction: column;
   background-color: #fff;

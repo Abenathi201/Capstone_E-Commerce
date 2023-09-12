@@ -12,13 +12,14 @@ export default createStore({
     items: [],
     deleteProduct: null,
     user: null,
+    users: null,
     userData: null,
     userRole: null,
     token: null,
-    // regStatus: null,
-    // logStatus: null,
+    cartItems: [],
+    // cartItem : null,
     authenticated: false,
-    userRole: null,
+    // userRole: null,
   },
 
   mutations: {
@@ -30,19 +31,35 @@ export default createStore({
       state.product = product
     },
 
-    setItems: (state, items) => {
-      state.items = items
+    setUsers: (state, users) => {
+      state.users = users
     },
 
-    addItem: (state, item) => {
-      state.items.push(item)
-    },
+    // setItems: (state, items) => {
+    //   state.items = items
+    // },
 
-    setDeleteItem: (state, cartID) => {
-      const delItem = state.items.findIndex((item) => item.cartID === cartID);
-      if (delItem !== -1) {
-        state.cartItems.splice(delItem, 1);
-      }
+    // addItem: (state, item) => {
+    //   state.items.push(item)
+    // },
+
+    // setDeleteItem: (state, cartID) => {
+    //   const delItem = state.items.findIndex((item) => item.cartID === cartID);
+    //   if (delItem !== -1) {
+    //     state.cartItems.splice(delItem, 1);
+    //   }
+    // },
+
+    // setCartItems(state, cartItems) {
+    //   state.items = cartItems;
+    // },
+
+    // addToCart(state, item) {
+    //   state.items.push(item);
+    // },
+
+    removeFromCart(state, cartID) {
+      state.items = state.items.filter(item => item.cartID !== cartID);
     },
 
     setUser: (state, user) => {
@@ -51,29 +68,23 @@ export default createStore({
 
     setUserData(state, userData) {
       state.userData = userData;
-
-      const userDataForCookie = {
-        msg: userData.msg,
-        token: userData.token,
-        result: userData.result,
-      };
     
-      // if (userData && userData.userRole) {
-      //   state.userRole = userData.userRole;
+      if (userData) {
+        const userDataForCookie = {
+          msg: userData.msg,
+          token: userData.token,
+          result: userData.result,
+        };
+    
         Cookies.set("userData", JSON.stringify(userDataForCookie), {
-          expires: 1, // Set the expiration time for the cookie (in days)
-          path: "/", // Set the path for which the cookie is valid
-          secure: true, // Set to true if your site is using HTTPS
-          sameSite: "None", // Set the SameSite attribute for cross-origin cookies
+          expires: 1,
+          path: "/",
+          secure: true,
+          sameSite: "None",
         });
-      // } else {
-      //   state.userData = null;
-      //   state.userRole = null;
-      //   Cookies.remove("userData", { path: "/" });
-      // }
+      }
     },
     
-
     setToken(state, token) {
       state.token = token;
       Cookies.set("userToken", token, {
@@ -89,16 +100,50 @@ export default createStore({
       state.userRole = userRole;
     },
 
-    setRegStatus(state, status) {
-      state.regStatus = status;
-    },
-
-    setLogStatus(state, status) {
-      state.logStatus = status;
-    },
-
     setError(state, error) {
       state.error = error;
+    },
+
+    setCartItems(state, cartItems) {
+      console.log('Setting cart items:', cartItems)
+      state.cartItems = cartItems;
+      localStorage.setItem('cart', JSON.stringify(state.cartItems))
+    },
+  
+    // addToCart(state, cartItem) {
+    //   state.cartItems.push(cartItem);
+    //   localStorage.setItem('cart', JSON.stringify(state.cartItems));
+    // },
+
+    addToCart(state, { productID, quantity }) {
+      const cartItem = state.cartItems.find(item => item.productID === productID);
+    
+      if (cartItem) {
+        // If the item is already in the cart, update its quantity
+        cartItem.quantity += quantity;
+      } else {
+        // If the item is not in the cart, add it
+        const newItem = {
+          productID: productID,
+          quantity: quantity,
+        };
+        state.cartItems.push(newItem);
+      }
+    
+      localStorage.setItem('cart', JSON.stringify(state.cartItems));
+    },  
+
+    updateQuantity(state, { cartID, quantity }) {
+      const item = state.cartItems.find(item => item.cartID === cartID);
+  
+      if (item) {
+        item.quantity = quantity;
+        localStorage.setItem('cart', JSON.stringify(state.cartItems));
+      }
+    },
+  
+    removeFromCart(state, cartID) {
+      state.cartItems = state.cartItems.filter(item => item.cartID !== cartID);
     },
   },
 
@@ -203,23 +248,23 @@ export default createStore({
       }
     },
 
-    async getItems(context) {
-      try{
-        const response = await fetch(`${dbLink}items`);
+    // async getItems(context) {
+    //   try{
+    //     const response = await fetch(`${dbLink}items`);
 
-        if(!response.ok) {
-          throw Error("Could not retrieve items from cart")
-        } else {
-          const data = await response.json();
-          const items = data.results;
-          context.commit("setItems", items);
-          console.log(items);
-        }
+    //     if(!response.ok) {
+    //       throw Error("Could not retrieve items from cart")
+    //     } else {
+    //       const data = await response.json();
+    //       const items = data.results;
+    //       context.commit("setItems", items);
+    //       console.log(items);
+    //     }
 
-      } catch (err) {
-        context.commit("Failed to fetch cart items", err.message)
-      }
-    },
+    //   } catch (err) {
+    //     context.commit("Failed to fetch cart items", err.message)
+    //   }
+    // },
 
     // addItem (context, item) {
     //   try {
@@ -227,29 +272,77 @@ export default createStore({
     //   } catch (err) {
     //     context.commit("Failed to add item", err.message)
     //   }
+    // }, 
+
+    // async deleteItem({ commit }, cartID) {
+    //   try {
+    //     const response = await fetch(`${dbLink}items/${cartID}`, {
+    //       method: 'DELETE',
+    //     });
+    
+    //     if (response.ok) {
+    //       // If the deletion request was successful, commit the removeFromCart mutation
+    //       commit('setDeleteItem', cartID);
+    //     } else {
+    //       // Handle errors if needed
+    //       console.error('Error deleting item from cart:', response.statusText);
+    //     }
+    //   } catch (error) {
+    //     // Handle other errors, e.g., network issues
+    //     console.error('Error deleting item from cart:', error);
+    //   }
     // },
 
+    // async getItems(context) {
+    //   try {
+    //     const response = await fetch(`${dbLink}items`);
+    //     if (!response.ok) {
+    //       throw Error("Failed to retrieve cart items");
+    //     }
+    //     const data = await response.json();
+    //     const items = data.results;
+    //     context.commit("setCartItems", items);
+    //     console.log(items);
+    //   } catch (err) {
+    //     context.commit("setError", err.message);
+    //   }
+    // },
     
-    
+    // async addItem(context, productID) {
+    //   try {
+    //     const response = await fetch(`${dbLink}add-item`, {
+    //       method: "POST",
+    //       headers: {
+    //         "Content-Type": "application/json",
+    //       },
+    //       body: JSON.stringify({ productID }),
+    //     });
+    //     if (!response.ok) {
+    //       throw Error("Failed to add item to cart");
+    //     }
+    //     const data = await response.json();
+    //     context.commit("addToCart", data.result);
+    //     console.log("Item added to cart successfully!");
+    //   } catch (error) {
+    //     context.commit("setError", error.message);
+    //   }
+    // },
 
-    async deleteItem({ commit }, cartID) {
-      try {
-        const response = await fetch(`${dbLink}items/${cartID}`, {
-          method: 'DELETE',
-        });
-    
-        if (response.ok) {
-          // If the deletion request was successful, commit the removeFromCart mutation
-          commit('setDeleteItem', cartID);
-        } else {
-          // Handle errors if needed
-          console.error('Error deleting item from cart:', response.statusText);
-        }
-      } catch (error) {
-        // Handle other errors, e.g., network issues
-        console.error('Error deleting item from cart:', error);
-      }
-    },
+    // async deleteItem(context, cartID) {
+    //   console.log('Deleting item with cartID:', cartID);
+    //   try {
+    //     const response = await fetch(`${dbLink}items/${cartID}`, {
+    //       method: "DELETE",
+    //     });
+    //     if (!response.ok) {
+    //       throw Error("Failed to remove item from cart");
+    //     }
+    //     context.commit("removeFromCart", cartID);
+    //     console.log("Item removed from cart successfully!");
+    //   } catch (error) {
+    //     context.commit("setError", error.message);
+    //   }
+    // },
 
     async registerUser(context, userData) {
       try {
@@ -323,6 +416,13 @@ export default createStore({
           //   secure: true,
           //   sameSite: "None",
           // });
+
+          const accessToken = data.token;
+
+      // Save user data and access token in local storage
+      localStorage.setItem('userData', JSON.stringify(userData));
+      localStorage.setItem('accessToken', accessToken);
+      context.commit('setUser', data.user);
           context.commit("setToken", data.token);
           context.commit("setUserData", userData);
           context.commit("setUserRole", data.result.userRole);
@@ -334,20 +434,248 @@ export default createStore({
     
       } catch (error) {
         console.error('Error logging in user:', error);
+        context.commit("setError", error.message);
         throw error;
       }
     },
 
+    async getUsers(context) {
+      try{
+        const response = await fetch(`${dbLink}users`);
+
+        if(!response.ok) {
+          throw Error("Failed to fetch users")
+        } else {
+          const data = await response.json();
+          const users = data.results;
+          context.commit("setUsers", users);
+          console.log('Users fetched', users);
+        }
+
+      } 
+      catch (err) {
+        context.commit("Failed to get users", err.message)
+      }
+    },
+
+    async getUser(context, userID) {
+      try {
+        const response = await fetch(`${dbLink}users/${userID}`);
+
+        if(!response.ok) {
+          throw Error("Failed to get user")
+        } else {
+          const data = await response.json();
+          const user = data.result[0];
+          context.commit("setUser", user);
+          console.log(user);
+        }
+      } catch (err) {
+        context.commit("Failed to get a single user", err.message)
+      }
+    },
+
     logout(context) {
-      context.token = null;
-      context.userData = null;
+      context.commit("setToken", null);
+      context.commit("setUserData", null);
+      context.commit("setUserRole", null);
+      
+      // Clear local storage
+      localStorage.removeItem('userData');
+      localStorage.removeItem('accessToken');
+    
+      // Clear cookies
       Cookies.remove("userToken", { path: "/" });
       Cookies.remove("userData", { path: "/" });
-      // router.push("/")
-    },
-              
     
+      window.location.reload();
+    },
+
+    // async getCartItems(context, userID) {
+    //   try {
+    //     const response = await fetch(`${dbLink}items/${userID}`);
+    //     if (!response.ok) {
+    //       throw Error("Failed to retrieve cart items");
+    //     }
+    //     const data = await response.json();
+    //     const cartItems = data.results;
+    //     context.commit("setCartItems", cartItems);
+    //   } catch (error) {
+    //     context.commit("setError", error.message);
+    //   }
+    // },
+
+    async getCartItems(context) {
+      const userID = context.state.userData?.result?.userID; // Access userID from state
+      console.log('userID:', userID);
+    
+      if (userID) { // Check if userID is available
+        try {
+          const response = await fetch(`${dbLink}items/${userID}`);
+          if (!response.ok) {
+            throw Error("Failed to retrieve cart items");
+          }
+          const data = await response.json();
+          console.log(data);
+          const cartItems = data.results;
+          context.commit("setCartItems", cartItems);
+          console.log(cartItems);
+        } catch (error) {
+          context.commit("setError", error.message);
+        }
+      } else {
+        console.error('User data or userID not found in state');
+      }
+    },    
+  
+    // async addToCart(context, { productID, quantity }) {
+    //   console.log("Adding to cart:", productID, quantity);
+    //   try {
+    //     const response = await fetch(`${dbLink}add-items/${context.state.user.userID}`, {
+    //       method: "POST",
+    //       headers: {
+    //         "Content-Type": "application/json",
+    //       },
+    //       body: JSON.stringify({ productID, quantity }),
+    //     });
+    //     console.log("Response:", response);
+    //     // body: JSON.stringify(this.$store.state.cartItems)
+    //     if (!response.ok) {
+    //       throw new Error(`Failed to add item to cart. Status: ${response.status}`);
+    //     } 
+    //     const data = await response.json();
+    //     context.commit("addToCart", data.result);
+    //   } catch (error) {
+    //     context.commit("setError", error.message);
+    //   }
+    // },
+
+    // async addToCart(context, { productID, quantity }) {
+    //   console.log("addToCart action is being executed. Product ID:", productID, "Quantity:", quantity);
+    //   // console.log('User ID:', context.state.user.userID);
+    //   console.log('User State:', context.state.user);
+    //   try {
+    //     const response = await fetch(`${dbLink}add-items/${context.state.user.userID}`, {
+    //       method: "POST",
+    //       headers: {
+    //         "Content-Type": "application/json",
+    //       },
+    //       body: JSON.stringify({ productID, quantity }),
+    //     });
+    //     console.log("Response:", response);
+    //     if (!response.ok) {
+    //       throw new Error(`Failed to add item to cart. Status: ${response.status}`);
+    //     }
+    //     const data = await response.json();
+    //     console.log(data); // Check the data returned from the server
+    //     context.commit("addToCart", data.result);
+    //   } catch (error) {
+    //     context.commit("setError", error.message);
+    //   }
+    // },
+
+    // async addToCart(context, { productID, quantity }) {
+    //   try {
+    //     const userID = context.state.user.userID; // Get the user ID from the Vuex store
+    //     console.log(userID);
+    //     const response = await fetch(`${dbLink}add-items/${userID}`, {
+    //       method: "POST",
+    //       headers: {
+    //         "Content-Type": "application/json",
+    //       },
+    //       body: JSON.stringify({ productID, quantity }),
+    //     });
+    
+    //     if (!response.ok) {
+    //       throw new Error(`Failed to add item to cart. Status: ${response.status}`);
+    //     }
+    
+    //     const data = await response.json();
+    //     context.commit("addToCart", data.result);
+    //   } catch (error) {
+    //     context.commit("setError", error.message);
+    //   }
+    // },
+
+    // async addToCart(context, { userID, productID, quantity }) {
+    //   try {
+    //     const response = await fetch(`${dbLink}add-items/${userID}`, {
+    //       method: "POST",
+    //       headers: {
+    //         "Content-Type": "application/json",
+    //       },
+    //       body: JSON.stringify({ productID, quantity }),
+    //     });
+    
+    //     if (!response.ok) {
+    //       throw new Error(`Failed to add item to cart. Status: ${response.status}`);
+    //     }
+    
+    //     const data = await response.json();
+    //     context.commit("addToCart", data.result);
+    //   } catch (error) {
+    //     context.commit("setError", error.message);
+    //   }
+    // },   
+    
+    async addToCart(context, { productID, quantity }) {
+      try {
+        const userID = context.state.userData.result.userID; // Assuming userData contains the user information
+        console.log(userID);
+        const response = await fetch(`${dbLink}add-items/${userID}`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ productID, quantity }),
+        });
+    
+        if (!response.ok) {
+          throw new Error(`Failed to add item to cart. Status: ${response.status}`);
+        }
+    
+        const data = await response.json();
+        context.commit("addToCart", data.result);
+      } catch (error) {
+        context.commit("setError", error.message);
+      }
+    },
+
+    async updateCartQuantity(context, { cartID, quantity }) {
+      try {
+        const response = await fetch(`${dbLink}items/${cartID}`, {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ quantity }),
+        });
+  
+        if (!response.ok) {
+          throw Error("Failed to update item quantity in cart");
+        }
+  
+        context.commit("updateQuantity", { cartID, quantity });
+      } catch (error) {
+        context.commit("setError", error.message);
+      }
+    },
+  
+    async removeFromCart(context, cartID) {
+      const userID = context.state.userData.result.userID;
+      console.log("User ID:", userID, "Cart ID:", cartID);
+      try {
+        const response = await fetch(`${dbLink}items/${userID}/${cartID}`, {
+          method: "DELETE",
+        });
+        if (!response.ok) {
+          throw Error("Failed to remove item from cart");
+        }
+        context.commit("removeFromCart", cartID);
+      } catch (error) {
+        context.commit("setError", error.message);
+      }
+    },  
+      
   }
 })
-
-// modules: {}

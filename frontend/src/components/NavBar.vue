@@ -12,14 +12,18 @@
           <router-link class="links" to="#"><i class="uil uil-envelope"></i>Contact</router-link>
           <!-- <router-link class="links" to="admin">Admin</router-link> -->
           <router-link class="links" v-if="userRole === 'admin'" to="/admin">Admin</router-link>
-          <router-link class="links" v-if="userRole === 'user'" to="/admin">Admin</router-link>
+          <router-link class="links" v-if="userRole === 'admin'" to="/users">Users</router-link>
+          <router-link class="links" v-if="userRole === 'user'" to="/user">User</router-link>
         </div>
       </div>
 
       <div class="icons">
         <i class="uil uil-search"></i>
-        <i class="uil uil-shopping-cart" @click="openModal"></i>
-        <CartComp v-if="isModalVisible" @close="closeModal"></CartComp>
+        <router-link to="/cart">
+          <i class="uil uil-shopping-cart"></i>
+
+        </router-link>
+        <!-- <CartComp v-if="isModalVisible" @close="closeModal"></CartComp> -->
         <router-link :to="{ name: 'login' }" v-if="!authenticated"> <i class="uil uil-user"></i> </router-link>
         <button v-else @click="logout">Logout</button>
         
@@ -31,7 +35,6 @@
 
 <script>
 import CartComp from './CartComp.vue';
-
 export default {
     components: { CartComp },
 
@@ -39,7 +42,7 @@ export default {
       return {
         isSticky: false,
         isNavigationActive: false,
-        isModalVisible: false,
+        // isModalVisible: false,
       };
     },
 
@@ -65,15 +68,16 @@ export default {
       handleScroll() {
           this.isSticky = window.scrollY > 0;
       },
+      
 
-      openModal() {
-          // console.log('Open modal clicked');
-          this.isModalVisible = true;
-      },
+      // openModal() {
+      //     // console.log('Open modal clicked');
+      //     this.isModalVisible = true;
+      // },
 
-      closeModal() {
-          this.isModalVisible = false;
-      },
+      // closeModal() {
+      //     this.isModalVisible = false;
+      // },
 
       logout() {
           this.$store.dispatch("logout");
@@ -84,6 +88,16 @@ export default {
   
     mounted() {
       window.addEventListener("scroll", this.handleScroll);
+
+      const userData = JSON.parse(localStorage.getItem('userData'));
+  const accessToken = localStorage.getItem('accessToken');
+
+  if (userData && accessToken) {
+    // Dispatch mutations to set user data and token in Vuex store
+    this.$store.commit("setToken", accessToken);
+    this.$store.commit("setUserData", userData);
+    this.$store.commit("setUserRole", userData.result.userRole);
+  }
     },
   
     beforeDestroy() {

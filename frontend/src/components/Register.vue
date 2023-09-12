@@ -78,6 +78,7 @@ export default {
   },
   methods: {
     async registerUser() {
+      
       const user = {
         firstName: this.users.firstName,
         lastName: this.users.lastName,
