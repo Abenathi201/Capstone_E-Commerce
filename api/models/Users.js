@@ -2,7 +2,6 @@ const db = require('../config')
 const { hash, compare, hashSync } = require('bcrypt');
 const { createToken } = require('../middleware/AuthenticateUsers');
 class Users{
-
     getUsers(req, res) {
         const query = `
         SELECT userID, firstName, lastName, 
@@ -97,8 +96,7 @@ class Users{
           });
         }
       });
-    }
-          
+    }       
   
     // Update a user
     updateUser(req, res) {
