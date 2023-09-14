@@ -21,7 +21,7 @@ class Products {
     getProduct(req, res) {
         const query = `
         SELECT productID, productName, productPrice,
-        imageURL, description, quantity
+        imageURL, description, quantity, Categories
         FROM Products
         WHERE productID = ${req.params.id};
         ` 
