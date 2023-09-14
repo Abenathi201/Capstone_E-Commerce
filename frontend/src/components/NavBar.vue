@@ -18,7 +18,7 @@
       </div>
 
       <div class="icons">
-        <i class="uil uil-search"></i>
+        <!-- <i class="uil uil-search"></i> -->
         <router-link to="/cart">
           <i class="uil uil-shopping-cart"></i>
 

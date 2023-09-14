@@ -126,17 +126,20 @@ table tr:nth-child(2n+1) {
     position: absolute;
   }
   td:nth-child(2):before {
-    content: "Name:";
-  }
-  td:nth-child(3):before {
-    content: "Email:";
-  }
-  td:nth-child(4):before {
-    content: "Phone:";
-  }
-  td:nth-child(5):before {
-    content: "Comments:";
-  }
+      content: "Product ID:";
+    }
+    td:nth-child(3):before {
+      content: "Name:";
+    }
+    td:nth-child(4):before {
+      content: "Price:";
+    }
+    td:nth-child(5):before {
+      content: "Description:";
+    }
+    td:nth-child(6):before {
+      content: "Quantity:";
+    }
 
   tr {
     padding: 10px 0;
