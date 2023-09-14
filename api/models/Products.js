@@ -5,7 +5,7 @@ class Products {
     getProducts(req, res) {
         const query = `
         SELECT productID, productName, productPrice,
-        imageURL, description, quantity
+        imageURL, description, quantity, Categories
         FROM Products;
         `
         db.query(query, (err, results) => {
