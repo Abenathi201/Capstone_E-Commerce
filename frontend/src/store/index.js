@@ -17,9 +17,7 @@ export default createStore({
     userRole: null,
     token: null,
     cartItems: [],
-    // cartItem : null,
     authenticated: false,
-    // userRole: null,
   },
 
   mutations: {
@@ -105,7 +103,7 @@ export default createStore({
     },
 
     setCartItems(state, cartItems) {
-      console.log('Setting cart items:', cartItems)
+      // console.log('Setting cart items:', cartItems)
       state.cartItems = cartItems;
       localStorage.setItem('cart', JSON.stringify(state.cartItems))
     },
@@ -115,23 +113,41 @@ export default createStore({
     //   localStorage.setItem('cart', JSON.stringify(state.cartItems));
     // },
 
+    // addToCart(state, { productID, quantity }) {
+    //   const cartItem = state.cartItems.find(item => item.productID === productID);
+    
+    //   if (cartItem) {
+    //     // If the item is already in the cart, update its quantity
+    //     cartItem.quantity += quantity;
+    //   } else {
+    //     // If the item is not in the cart, add it
+    //     const newItem = {
+    //       productID: productID,
+    //       quantity: quantity,
+    //     };
+    //     state.cartItems.push(newItem);
+    //   }
+    
+    //   localStorage.setItem('cart', JSON.stringify(state.cartItems));
+    // },
+
     addToCart(state, { productID, quantity }) {
-      const cartItem = state.cartItems.find(item => item.productID === productID);
-    
-      if (cartItem) {
-        // If the item is already in the cart, update its quantity
-        cartItem.quantity += quantity;
-      } else {
-        // If the item is not in the cart, add it
-        const newItem = {
-          productID: productID,
-          quantity: quantity,
-        };
-        state.cartItems.push(newItem);
-      }
-    
-      localStorage.setItem('cart', JSON.stringify(state.cartItems));
-    },  
+  const cartItem = state.cartItems.find(item => item.productID === productID);
+
+  if (cartItem) {
+    // If the item is already in the cart, update its quantity
+    cartItem.quantity += quantity;
+  } else {
+    // If the item is not in the cart, add it
+    const newItem = {
+      productID: productID,
+      quantity: quantity,
+    };
+    state.cartItems.push(newItem);
+  }
+
+  localStorage.setItem('cart', JSON.stringify(state.cartItems));
+},
 
     updateQuantity(state, { cartID, quantity }) {
       const item = state.cartItems.find(item => item.cartID === cartID);
@@ -506,7 +522,10 @@ export default createStore({
     // },
 
     async getCartItems(context) {
-      const userID = context.state.userData?.result?.userID; // Access userID from state
+      const userData = context.state.userData;
+      console.log("User Data", userData);
+
+      const userID = context.state.userData?.result?.userID;
       console.log('userID:', userID);
     
       if (userID) { // Check if userID is available
@@ -549,6 +568,41 @@ export default createStore({
     //     context.commit("setError", error.message);
     //   }
     // },
+
+    async addToCart(context, { productID, quantity }) {
+      try {
+        const userID = context.state.userData.result.userID; // Assuming userData contains the user information
+        console.log("User DD:", userID);
+        const response = await fetch(`${dbLink}add-items/${userID}`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ productID, quantity }),
+        });
+    
+        if (!response.ok) {
+          throw new Error(`Failed to add item to cart. Status: ${response.status}`);
+        }
+    
+        const data = await response.json();
+        const cartItem = context.state.cartItems.find(item => item.productID === productID);
+    
+        if (cartItem) {
+          // If the item is already in the cart, update its quantity
+          cartItem.quantity += quantity;
+        } else {
+          // If the item is not in the cart, add it
+          const newItem = {
+            productID: productID,
+            quantity: quantity,
+          };
+          context.commit("addToCart", newItem); // Call the original mutation
+        }
+      } catch (error) {
+        context.commit("setError", error.message);
+      }
+    },
 
     // async addToCart(context, { productID, quantity }) {
     //   console.log("addToCart action is being executed. Product ID:", productID, "Quantity:", quantity);
@@ -618,32 +672,33 @@ export default createStore({
     //   }
     // },   
     
-    async addToCart(context, { productID, quantity }) {
-      try {
-        const userID = context.state.userData.result.userID; // Assuming userData contains the user information
-        console.log(userID);
-        const response = await fetch(`${dbLink}add-items/${userID}`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ productID, quantity }),
-        });
+    // async addToCart(context, { productID, quantity }) {
+    //   try {
+    //     const userID = context.state.userData.result.userID; // Assuming userData contains the user information
+    //     console.log(userID);
+    //     const response = await fetch(`${dbLink}add-items/${userID}`, {
+    //       method: "POST",
+    //       headers: {
+    //         "Content-Type": "application/json",
+    //       },
+    //       body: JSON.stringify({ productID, quantity }),
+    //     });
     
-        if (!response.ok) {
-          throw new Error(`Failed to add item to cart. Status: ${response.status}`);
-        }
+    //     if (!response.ok) {
+    //       throw new Error(`Failed to add item to cart. Status: ${response.status}`);
+    //     }
     
-        const data = await response.json();
-        context.commit("addToCart", data.result);
-      } catch (error) {
-        context.commit("setError", error.message);
-      }
-    },
+    //     const data = await response.json();
+    //     context.commit("addToCart", data.result);
+    //   } catch (error) {
+    //     context.commit("setError", error.message);
+    //   }
+    // },
 
-    async updateCartQuantity(context, { cartID, quantity }) {
+    async updateCartQuantity(context, {  cartID, quantity }) {
       try {
-        const response = await fetch(`${dbLink}items/${cartID}`, {
+        const userID = context.state.userData.result.userID;
+        const response = await fetch(`${dbLink}items/${userID}/${cartID}`, {
           method: "PUT",
           headers: {
             "Content-Type": "application/json",
@@ -675,7 +730,7 @@ export default createStore({
       } catch (error) {
         context.commit("setError", error.message);
       }
-    },  
+    },
       
   }
 })

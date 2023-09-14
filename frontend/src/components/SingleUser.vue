@@ -3,6 +3,7 @@
         
     </div>
 </template>
+
 <script>
 export default {
     computed: {
@@ -23,6 +24,7 @@ export default {
     },   
 }
 </script>
+
 <style scoped>
     
 </style>

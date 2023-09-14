@@ -22,7 +22,7 @@
                           <button @click="decreaseQuantity(item)">
                               <i class="fas fa-minus"></i>
                               </button>
-                              <input v-model="item.quantity" type="number" min="1">
+                              <input v-model="item.quantity" type="number" min="1" readonly>
                               <button @click="increaseQuantity(item)">
                               <i class="fas fa-plus"></i>
                               </button>
@@ -72,10 +72,12 @@ export default {
       decreaseQuantity(item) {
     if (item.quantity > 1) {
       item.quantity--;
+      this.updateQuantity(item.cartID, item.quantity);
     }
   },
   increaseQuantity(item) {
     item.quantity++;
+    this.updateQuantity(item.cartID, item.quantity);
   },
 
       // async addToCart(productID, quantity) {
@@ -102,11 +104,6 @@ export default {
 
 <style scoped>
 .modal {
-  /* position: fixed; */
-  /* top: 0;
-  left: 0;
-  width: 675px; */
-  /* min-height: 1116px; */
   display: flex;
   flex-direction: column;
   background-color: #fff;
@@ -127,11 +124,12 @@ export default {
 .modal-inner{
     width: 222px;
     height: 250px;
+    /* margin-inline: 20px; */
 }
 
-.modal-img img{
-    width: 100%;
-    height: 100%;
+img{
+    width: 222px;
+    height: 250px;
 }
 .modal-info{
     width: 301px;
@@ -139,6 +137,40 @@ export default {
 }
 
 .modal-info .name h1 {
-    font-size: 16px;
+    font-size: 24px;
+    font-weight: bold;
+    margin-top: 15px;
+}
+
+.actions{
+  display: flex;
+  justify-content: space-between;
+  gap: 50px;
+}
+
+.input {
+  display: flex;
+}
+
+.del-btn i{
+  width: 40px;
+  height: 40px;
+  background: #FFFFFF;
+  border: 1px #E4E4E4 solid;
+  cursor: pointer;
+}
+
+.input button{
+  width: 40px;
+  height: 40px;
+  background: #FFFFFF;
+  border: 1px #E4E4E4 solid;
+}
+.input input{
+  width: 40px;
+  height: 40px;
+  background: #FFFFFF;
+  border: 1px #E4E4E4 solid;
+  text-align: center;
 }
 </style>

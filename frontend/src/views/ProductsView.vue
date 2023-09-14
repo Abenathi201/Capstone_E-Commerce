@@ -7,8 +7,31 @@
             </h5>
         </div>
 
-        <div class="card-container" v-if="products">
-            <ProductCard :products="products" />
+        <!-- <div class="category-filter">
+          <label for="category">Category:</label>
+          <select v-model="selectedCategory" id="Category">
+            <option value="">All</option>
+            <option value="apparel">Apparel</option>
+            <option value="accessories">Accessories</option>
+            <option value="collectibles">Collectibles</option>
+          </select>
+        </div> -->
+
+        <div class="filter">
+          <h3>Filter</h3>
+
+          <select v-model="selectedCategory" id="Category">
+            <option value="">All</option>
+            <option value="apparel">Apparel</option>
+            <option value="accessories">Accessories</option>
+            <option value="collectibles">Collectibles</option>
+          </select>
+
+          
+        </div>
+
+        <div class="card-container" v-if="filteredProducts">
+            <ProductCard :products="filteredProducts" />
         </div>
 
         <div v-else>
@@ -22,9 +45,27 @@ import ProductCard from '@/components/ProductCard.vue';
 export default {
     components: { ProductCard },
 
+    data() {
+      return {
+        selectedCategory: null,
+      };
+    },
+
     computed: {
         products() {
             return this.$store.state.products;
+        },
+
+        filteredProducts() {
+          const selectedCategory = this.selectedCategory; // <-- Changed this line
+
+          if (selectedCategory) {
+            return this.products.filter((product) => {
+              return product.category && product.category.includes(selectedCategory);
+            });
+          } else {
+            return this.products;
+          }
         },
     },
 

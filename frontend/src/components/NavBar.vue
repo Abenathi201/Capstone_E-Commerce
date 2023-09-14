@@ -9,7 +9,7 @@
           <router-link class="links" to="/"><i class="uil uil-home"></i>Home</router-link>
           <router-link class="links" to="about">About</router-link>
           <router-link class="links" to="products">Products</router-link>
-          <router-link class="links" to="#"><i class="uil uil-envelope"></i>Contact</router-link>
+          <router-link class="links" to="contact"><i class="uil uil-envelope"></i>Contact</router-link>
           <!-- <router-link class="links" to="admin">Admin</router-link> -->
           <router-link class="links" v-if="userRole === 'admin'" to="/admin">Admin</router-link>
           <router-link class="links" v-if="userRole === 'admin'" to="/users">Users</router-link>
