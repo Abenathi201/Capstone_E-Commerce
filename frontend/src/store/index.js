@@ -3,7 +3,7 @@ import Swal from 'sweetalert2'
 import Cookies from "js-cookie";
 import router from '@/router';
 
-const dbLink = "http://localhost:5000/";
+const dbLink = "https://capstone-e-commerce.onrender.com/";
 
 export default createStore({
   state: {
