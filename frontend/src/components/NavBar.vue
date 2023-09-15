@@ -27,7 +27,7 @@
           <!-- <CartComp v-if="isModalVisible" @close="closeModal"></CartComp> -->
           <router-link :to="{ name: 'login' }" v-if="!authenticated"> <i class="uil uil-user"></i> </router-link>
           <!-- <button v-else @click="logout">Logout</button> -->
-          <i class="uil uil-signout" @click="logout"></i>
+          <i class="uil uil-signout" v-else @click="logout"></i>
           
         </div>
         <i class="uil uil-apps nav-menu-btn" @click="openNavigation"></i>
