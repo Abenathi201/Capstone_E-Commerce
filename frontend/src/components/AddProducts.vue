@@ -1,11 +1,5 @@
 <template>
     <div class="modal">
-        <div class="modal-header">
-            <h1>Add Products</h1>
-            <h2 @click="close">X</h2>
-        </div>
-
-        <div class="modal-inner">
             <div class="login-box">
                 <form @submit.prevent="addProduct">
                     <div class="user-box">
@@ -33,12 +27,16 @@
                       <label>Quantity</label>
                     </div>
 
+                    <div class="user-box">
+                      <input type="text" id="quantity" required v-model="newProduct.Categories">
+                      <label>Category</label>
+                    </div>
+
                     <center>
                         <button type="submit">SEND</button>
                     </center>
                 </form>
             </div>
-        </div>
     </div>
   </template>
 
@@ -52,6 +50,7 @@ export default {
                 imageURL: "",
                 description: "",
                 quantity: "",
+                Categories: "",
             }
         };
     },
@@ -70,7 +69,8 @@ export default {
                     productPrice: "",
                     imageURL: "",
                     description: "",
-                    quantity: ""
+                    quantity: "",
+                    Categories: "",
                 };
                 console.log("Product added successfully!")
             } catch (error) {
@@ -82,45 +82,18 @@ export default {
 </script>
 
 <style scoped>
-.modal {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 675px;
-    /* min-height: 1116px; */
-    display: flex;
-    flex-direction: column;
-    background-color: #000;
-}
-.modal-header{
-    display: flex;
-    justify-content: space-around;
-    margin-top: 15px;
-    border-bottom: 2px solid gray;
-    padding: 20px;
-}
-.modal-inner {  
-    width: 555px;
-    height: 250px;
-    display: flex;
-    justify-content: space-between;
-}
-.modal-inner{
-    width: 222px;
-    height: 250px;
-}
 .login-box {
   position: absolute;
-  top: 90%;
+  top: 50%;
   left: 50%;
+  transform: translate(-50%, -50%);
   width: 400px;
   padding: 40px;
   transform: translate(-50%, -50%);
-  background: rgba(24, 20, 20, 0.987);
+  background: #000000;
   box-sizing: border-box;
   box-shadow: 0 15px 25px rgba(0,0,0,.6);
-  border-radius: 10px;
+  margin-top: 50px;
 }
 
 .login-box .user-box {

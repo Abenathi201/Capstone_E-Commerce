@@ -22,6 +22,10 @@
                   <input type="number" id="quantity" required v-model="updatedProduct.quantity" :placeholder="updatedProduct.quantity">
                   <label>Quantity</label>
                 </div>
+                <div class="user-box">
+                  <input type="text" id="quantity" required v-model="updatedProduct.Categories" :placeholder="updatedProduct.Categories">
+                  <label>Category</label>
+                </div>
                 <button @click="updateProd">Update</button>
             </form>
         </div>
@@ -39,6 +43,7 @@ export default {
             imageURL: '',
             description: '',
             quantity: '',
+            Categories: '',
             }
         };
     },
@@ -48,7 +53,7 @@ export default {
             const componentContext = this;
             this.$store.dispatch("updateProduct", this.updatedProduct)
                 .then(() => {
-                    componentContext.$router.push('/admin');
+                    this.$router.push('/admin');
                 })
                 .catch(error => {
                     console.error(error);
@@ -72,33 +77,17 @@ export default {
 </script>
 
 <style scoped>
-.modal {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 675px;
-    /* min-height: 1116px; */
-    display: flex;
-    flex-direction: column;
-    background-color: #000;
-}
-.modal-header{
-    display: flex;
-    justify-content: space-around;
-    margin-top: 15px;
-    border-bottom: 2px solid gray;
-    padding: 20px;
-}
 .modal-inner {  
     width: 555px;
     height: 250px;
     display: flex;
     justify-content: space-between;
+    /* margin-top: 50px; */
 }
 .modal-inner{
     width: 222px;
     height: 250px;
+    /* margin-top: 50px; */
 }
 .login-box {
   position: absolute;
@@ -107,10 +96,10 @@ export default {
   width: 400px;
   padding: 40px;
   transform: translate(-50%, -50%);
-  background: rgba(24, 20, 20, 0.987);
+  background: #000000;
   box-sizing: border-box;
   box-shadow: 0 15px 25px rgba(0,0,0,.6);
-  border-radius: 10px;
+  margin-top: 50px;
 }
 
 .login-box .user-box {

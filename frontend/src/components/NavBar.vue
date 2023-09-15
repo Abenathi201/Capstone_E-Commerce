@@ -1,36 +1,40 @@
 <template>
-  <header :class="{ sticky: isSticky }">
-    <div class="nav-bar">
-      <a href="/" class="logo">LOGO</a>
-
-      <div class="navigation" :class="{ active: isNavigationActive }">
-        <div class="nav-items">
-          <i class="uil uil-times nav-close-btn" @click="closeNavigation"></i>
-          <router-link class="links" to="/"><i class="uil uil-home"></i>Home</router-link>
-          <router-link class="links" to="about">About</router-link>
-          <router-link class="links" to="products">Products</router-link>
-          <router-link class="links" to="contact"><i class="uil uil-envelope"></i>Contact</router-link>
-          <!-- <router-link class="links" to="admin">Admin</router-link> -->
-          <router-link class="links" v-if="userRole === 'admin'" to="/admin">Admin</router-link>
-          <router-link class="links" v-if="userRole === 'admin'" to="/users">Users</router-link>
-          <router-link class="links" v-if="userRole === 'user'" to="/user">User</router-link>
+  <div>
+    <header :class="{ sticky: isSticky }">
+      <div class="nav-bar">
+        <a href="/" class="logo">BESTINTHEMERCH</a>
+  
+        <div class="navigation" :class="{ active: isNavigationActive }">
+          <div class="nav-items">
+            <i class="uil uil-times nav-close-btn" @click="closeNavigation"></i>
+            <router-link class="links" to="/"><i class="uil uil-home"></i>Home</router-link>
+            <router-link class="links" to="about">About</router-link>
+            <router-link class="links" to="products">Products</router-link>
+            <router-link class="links" to="contact"><i class="uil uil-envelope"></i>Contact</router-link>
+            <!-- <router-link class="links" to="admin">Admin</router-link> -->
+            <router-link class="links" v-if="userRole === 'admin'" to="/admin">Admin</router-link>
+            <router-link class="links" v-if="userRole === 'admin'" to="/users">Users</router-link>
+            <router-link class="links" v-if="userRole === 'user'" to="/userProfile">User</router-link>
+          </div>
         </div>
+  
+        <div class="icons">
+          <!-- <i class="uil uil-search"></i> -->
+          <router-link to="/cart">
+            <i class="uil uil-shopping-cart"></i>
+  
+          </router-link>
+          <!-- <CartComp v-if="isModalVisible" @close="closeModal"></CartComp> -->
+          <router-link :to="{ name: 'login' }" v-if="!authenticated"> <i class="uil uil-user"></i> </router-link>
+          <!-- <button v-else @click="logout">Logout</button> -->
+          <i class="uil uil-signout" @click="logout"></i>
+          
+        </div>
+        <i class="uil uil-apps nav-menu-btn" @click="openNavigation"></i>
       </div>
+    </header>
 
-      <div class="icons">
-        <!-- <i class="uil uil-search"></i> -->
-        <router-link to="/cart">
-          <i class="uil uil-shopping-cart"></i>
-
-        </router-link>
-        <!-- <CartComp v-if="isModalVisible" @close="closeModal"></CartComp> -->
-        <router-link :to="{ name: 'login' }" v-if="!authenticated"> <i class="uil uil-user"></i> </router-link>
-        <button v-else @click="logout">Logout</button>
-        
-      </div>
-      <i class="uil uil-apps nav-menu-btn" @click="openNavigation"></i>
-    </div>
-  </header>
+  </div>
 </template>
 
 <script>
@@ -107,28 +111,11 @@ export default {
 </script>
 
 <style scoped>
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
-
-:root{
-    --white-color: #fff;
-    --dark-color: #222;
-    --body-bg-color: #fff;  /* BG IS FOR BACKGROUND COLOR */
-    --section-bg-color: #202834;
-    --navigation-item-hover-color: #3b5378;
-    
-    --text-shadow: 0 5px 25px rbga(0, 0, 0, 0.1);
-    --box-shadow: 0 5px 25px rgb(0 0 0 / 20%);
-
-    --scroll-bar-color: #fff;
-    --scroll-thumb-color: #282f4e;
-    --scroll-thumb-hover-color: #454f6b;
-}
-
 header{
     z-index: 999;
     position: fixed;
     width: 100%;
-    height: calc(5rem + 1rem);
+    height: 6rem;
     top: 0;
     left: 0;
     display: flex;
@@ -136,8 +123,8 @@ header{
     transition: 0.5s ease;
     /* transition-property: height, background; */
     background: #000;
+    /* margin-bottom: 300px; */
 }
-
 header.sticky{
     height: calc(2.5rem + 1rem);
     background: black;
@@ -160,13 +147,11 @@ header.sticky{
 
 .nav-bar .logo{
     color: #fff;
-    font-size: 1.8em;
+    font-size: 20px;
     font-weight: 600;
-    letter-spacing: 2px;
     text-decoration: none;
     text-shadow: 0 5px 25px rbga(0, 0, 0, 0.1);
 }
-
 .navigation .nav-items .links{
     color: #fff;
     font-size: 1em;
@@ -181,9 +166,10 @@ header.sticky{
 .icons i{
     margin-inline: 5px;
     color: #fff;
-    font-size: 1em;
+    font-size: 30px;
     text-decoration: none;
     text-shadow: 0 5px 25px rbga(0, 0, 0, 0.1);
+    cursor: pointer;
 }
 
 .navigation .nav-items a:not(:last-child){

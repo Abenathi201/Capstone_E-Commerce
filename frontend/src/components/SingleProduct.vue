@@ -187,4 +187,26 @@ export default {
     border: 1px solid #E4E4E4;
     cursor: pointer;
 }
+
+@media (max-width: 767px) {
+  .container {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .container1,
+  .container2 {
+    width: 100%;
+    max-width: none;
+  }
+
+  .img-div {
+    width: 100%;
+  }
+
+  .desc-div {
+    width: 100%;
+  }
+}
+
 </style>

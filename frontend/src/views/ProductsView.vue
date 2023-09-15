@@ -50,6 +50,7 @@
                 <input type="text" v-model="searchQuery" class="input-search" placeholder="Type to Search...">
               </div>
 
+
               <div class="sort-dropdown">
                 <label for="sortOrder">Sort By:</label>
                 <select v-model="selectedSortOrder" id="sortOrder">
@@ -298,5 +299,29 @@ span::after {
 .upper-bg h1 h5{
     text-align: center;
     color: pink;
+}
+
+@media (max-width: 768px) {
+  .container {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .filter {
+    width: 100%;
+    margin: 0;
+  }
+
+  .card-container {
+    margin-left: 0;
+  }
+
+  .upper-bg {
+    height: 300px;
+  }
+  
+  .products {
+    gap: 80px;
+  }
 }
 </style>

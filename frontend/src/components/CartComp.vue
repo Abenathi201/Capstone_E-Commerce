@@ -102,7 +102,7 @@ export default {
 };
 </script>
 
-<style scoped>
+<!-- <style scoped>
 .modal {
   display: flex;
   flex-direction: column;
@@ -172,5 +172,112 @@ img{
   background: #FFFFFF;
   border: 1px #E4E4E4 solid;
   text-align: center;
+}
+</style> -->
+
+<style scoped>
+.modal {
+  display: flex;
+  flex-direction: column;
+  background-color: #fff;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 15px;
+  border-bottom: 2px solid gray;
+  padding: 20px;
+}
+
+.modal-inner {
+  display: flex;
+  justify-content: space-between;
+  width: 100%; /* Use 100% width to make it responsive */
+  margin: 10px 0; /* Adjust margin as needed */
+  border: 1px solid #e4e4e4;
+  padding: 10px;
+}
+
+.modal-img img {
+  width: 100%; /* Make the image responsive */
+  max-width: 150px; /* Set a maximum width if needed */
+  height: auto; /* Maintain aspect ratio */
+}
+
+.modal-info {
+  flex-grow: 1; /* Allow this div to grow within its container */
+  padding-left: 10px; /* Add some spacing */
+}
+
+.name h1 {
+  font-size: 1.5em; /* Use relative font size */
+  font-weight: bold;
+  margin-top: 10px;
+}
+
+.actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 10px;
+}
+
+.input button,
+.input input {
+  width: 30px; /* Adjust width as needed */
+  height: 30px; /* Adjust height as needed */
+  font-size: 1.2em; /* Use relative font size */
+}
+
+.del-btn i {
+  width: 30px;
+  height: 30px;
+  background: #fff;
+  border: 1px #e4e4e4 solid;
+  cursor: pointer;
+  font-size: 1.2em; /* Use relative font size */
+}
+
+/* Media query for screens smaller than 768px */
+@media screen and (max-width: 768px) {
+  .modal-inner {
+    flex-direction: column; /* Stack items vertically */
+    text-align: center; /* Center-align text */
+  }
+
+  .modal-img img {
+    max-width: 100%; /* Adjust image width */
+    height: auto; /* Maintain aspect ratio */
+  }
+
+  .modal-info {
+    padding-left: 0; /* Reset left padding */
+    margin-top: 10px; /* Adjust top margin */
+  }
+
+  .name h1 {
+    font-size: 1.2em; /* Reduce font size */
+  }
+
+  .actions {
+    flex-direction: column; /* Stack buttons vertically */
+    align-items: center; /* Center-align buttons */
+    margin-top: 5px; /* Adjust top margin */
+  }
+
+  .input button,
+  .input input {
+    width: 40px; /* Adjust button and input width */
+    height: 40px; /* Adjust button and input height */
+  }
+
+  .del-btn i {
+    width: 40px; /* Adjust delete button width */
+    height: 40px; /* Adjust delete button height */
+    font-size: 1.4em; /* Increase font size */
+    margin-top: 5px; /* Adjust top margin */
+  }
 }
 </style>

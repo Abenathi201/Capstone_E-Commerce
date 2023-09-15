@@ -2,7 +2,7 @@
     <div class="table-users">
         <div class="header">
             <h3>Products</h3>
-            <button @click="openModal">Add User</button>
+            <router-link to="/addProducts">Add User</router-link>
             <AddProducts v-if="isModalVisible" @close="closeModal"></AddProducts>
         </div>
         <table cellspacing="2">
@@ -83,7 +83,7 @@ img {
     margin: 1em auto;
     overflow: hidden;
     width: 800px; */
-    margin-top: 200px;
+    margin-top: 100px;
 }
 
 table {

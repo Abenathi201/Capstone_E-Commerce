@@ -1,10 +1,12 @@
 <template>
   <NavBar/>
   <router-view/>
+  <!-- <FooterComp/> -->
 </template>
 
 <script>
 import NavBar from './components/NavBar.vue';
+// import FooterComp from './components/FooterComp.vue';
 export default {
   components: { NavBar }
 }
@@ -18,5 +20,10 @@ export default {
   padding: 0;
   box-sizing: border-box;
   font-family: 'Montserrat', sans-serif;
+  /* margin-block: 100px; */
 }
+
+/* router-view{
+  margin-block: 100px;
+} */
 </style>

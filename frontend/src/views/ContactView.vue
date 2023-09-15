@@ -36,21 +36,39 @@
 
 <script>
 export default {
-    
-}
+    data() {
+        return {
+            formData: {
+                name: '',
+                email: '',
+                hello: '',
+                subject: '',
+            },
+        };
+    },
+    methods: {
+        handleSubmit() {
+            console.log('Form submitted with data:', this.formData);
+        },
+    },
+};
 </script>
 
 <style scoped>
 .contact{
-    margin-top: 200px;
+    margin-top: 100px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 .form{
-    width: 866px;
-    height: 507px;
+    width: 100%;
+    max-width: 866px;
     box-shadow: 0px 0px 56px rgba(0, 38, 3, 0.08);
-    margin: auto;
+    margin: 20px;
     padding: 15px;
+    box-sizing: border-box;
 }
 
 .form h1{
@@ -66,40 +84,29 @@ export default {
     margin-top: 20px;
 }
 
-.upper{
+.upper, .lower{
+    width: 100%;
     display: flex;
+    flex-wrap: wrap;
     gap: 14px;
     margin-block: 20px;
 }
 
-.lower{
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-}
-
-.upper .name, .upper .email{
-    width: 382px;
+.upper .name, .upper .email,
+.lower .hello, .lower .subject{
+    width: 100%;
     height: 49px;
     border: 2px solid #E6E6E6;
     padding-left: 5px;
+    box-sizing: border-box;
 }
 
-.lower .hello{
-    width: 778px;
-    height: 49px;    
-    border: 2px solid #E6E6E6;
-    padding-left: 5px;
-}
 .lower .subject{
-    width: 778px;
     height: 98px;
-    border: 2px solid #E6E6E6;
-    padding-left: 5px;
 }
 
 .form button{
-    width: 175px;
+    width: 100%;
     height: 51px;
     background-color: #000000;
     color: #FFFFFF;
@@ -113,5 +120,6 @@ export default {
 iframe{
     margin-top: 45px;
     width: 100%;
+    max-width: 100%;
 }
 </style>

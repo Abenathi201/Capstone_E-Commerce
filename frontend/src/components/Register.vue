@@ -72,7 +72,7 @@ export default {
         userRole: "",
         emailAdd: "",
         userPass: "",
-        profileUrl: "",
+        profileUrl: "https://i.postimg.cc/25stK3gr/img-icon-0.png",
       }
     };
   },

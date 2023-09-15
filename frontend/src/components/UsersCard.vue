@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div class="card" v-for="user in users" :key="user.userID">
+        <!-- <div class="card" v-for="user in users" :key="user.userID">
             <router-link :to="{ name: 'user', params: { userID: user.userID } }">
                 <div class="card-img">
                     <img :src="user.profileUrl" :alt="user.firstName">
@@ -10,7 +10,7 @@
             <div class="desc">
                 <h3> {{ user.firstName }} {{ user.lastName }} </h3>
             </div>
-        </div>
+        </div> -->
 
         <div class="wrapper" v-for="user in users" :key="user.userID">
           <div class="user-card">
@@ -22,7 +22,8 @@
               <p><span>Email:</span> {{ user.emailAdd }}</p>
               <p><span>Gender:</span> {{ user.gender }}</p>
               <p><span>User Role:</span> {{ user.userRole }}</p>
-              <p><span>About me:</span> Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+              <router-link :to="{ name: 'user', params: { userID: user.userID } }">View Morer</router-link>
+              <button @click="deleteUser(user.userID)">Delete User</button>
             </div>
           </div>
         </div>
@@ -31,7 +32,24 @@
 
 <script>
 export default {
-    props: ["users"]
+    props: ["users"],
+
+    computed:{
+      user(){
+        return this.$store.state.user
+      }
+    },
+
+    methods: {
+      deleteUser(userID) {
+        console.log("Deleting User:", userID);
+        this.$store.dispatch("deleteUser", userID)
+      }
+    },
+
+    mounted() {
+      this.$store.dispatch("getUsers")
+    },
 }
 </script>
 

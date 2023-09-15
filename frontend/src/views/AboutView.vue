@@ -53,7 +53,7 @@
   </div>
 </template>
 
-<style scoped>
+<!-- <style scoped>
 .about{
   display: flex;
   flex-direction: column;
@@ -118,5 +118,93 @@
   font-weight: 400;
   text-align: center;
   margin-top: 110px;
+}
+</style> -->
+
+<style scoped>
+.about{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-content: center;
+  margin-top: 100px;
+  padding: 0 20px;
+}
+
+.about h1{
+  font-size: 32px;
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.about h5{
+  font-size: 24px;
+  color: rgba(30, 30, 30, 0.8);
+  text-align: center;
+  margin-bottom: 20px;
+  font-weight: bold;
+}
+
+.bg-img{
+  max-width: 100%;
+  margin: auto;
+}
+
+.bg-img img{
+  max-width: 100%;
+  height: auto;
+}
+
+.background{
+  max-width: 100%;
+  margin: auto;
+}
+
+.background p{
+  font-size: 18px;
+}
+
+.mission{
+  max-width: 100%;
+  background: #D9D9D9;
+  margin: auto;
+  margin-block: 20px;
+  padding: 15px;
+}
+
+.mission h3{
+  font-size: 24px;
+  font-weight: bold;
+  text-align: center;
+}
+
+.mission p{
+  font-size: 18px;
+  font-weight: 400;
+  text-align: center;
+  margin-top: 20px;
+}
+
+@media (max-width: 768px) {
+  .about h1 {
+    font-size: 28px;
+  }
+
+  .about h5 {
+    font-size: 20px;
+  }
+
+  .background p {
+    font-size: 16px;
+  }
+
+  .mission h3 {
+    font-size: 20px;
+  }
+
+  .mission p {
+    font-size: 16px;
+  }
 }
 </style>

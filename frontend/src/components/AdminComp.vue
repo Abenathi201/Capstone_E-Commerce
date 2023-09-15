@@ -10,9 +10,8 @@
             <td>
                 <i class="uil uil-edit" @click="openModal"></i>
                 <!-- <UpdateProduct v-if="isModalVisible" @close="closeModal"></UpdateProduct> -->
-                <!-- <i class="uil uil-trash-alt"  @click="deleteProduct(product.productID)"></i> -->
+                <i class="uil uil-trash-alt"  @click="deleteProduct(product.productID)"></i>
                 <router-link :to="{ name: 'updateProduct', params: {id: product.productID} }"> Edit</router-link>
-                <i class="uil uil-trash-alt"></i>
             </td>
         </tr>
     </tbody>
@@ -33,15 +32,15 @@ export default {
 
     methods: {
         async deleteProduct(productID) {
-            const confirmed = confirm("Are you sure you want to delete this product?");
-            if (confirmed) {
-                try {
-                    await this.$store.dispatch("deleteProduct", productID);
-                    console.log("Product delted successfully");
-                } catch (error) {
-                    console.error("Error deleting product:", error);
-                }
+          const confirmed = confirm("Are you sure you want to delete this product?");
+          if (confirmed) {
+              try {
+                  await this.$store.dispatch("deleteProduct", productID);
+                  window.location.reload();
+              } catch (error) {
+                console.error("Error deleting product:", error);
             }
+          }
         },
 
         openModal() {

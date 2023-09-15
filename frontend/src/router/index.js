@@ -61,6 +61,21 @@ const routes = [
     component: () => import(/* webpackChunkName: "about" */ '../views/UsersView.vue')
   },
   {
+    path: '/user/:userID',
+    name: 'user',
+    component: () => import(/* webpackChunkName: "about" */ '../components/SingleUser.vue')
+  },
+  {
+    path: '/userProfile',
+    name: 'userProfile',
+    component: () => import(/* webpackChunkName: "about" */ '../views/UserProfile.vue')
+  },
+  {
+    path: '/addProducts',
+    name: 'addProducts',
+    component: () => import(/* webpackChunkName: "about" */ '../components/AddProducts.vue')
+  },
+  {
     path: '/login',
     name: 'login',
     component: () => import(/* webpackChunkName: "about" */ '../components/Login.vue')

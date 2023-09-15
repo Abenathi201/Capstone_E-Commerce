@@ -26,15 +26,15 @@
     data() {
       return {
         images: [
-          { src: 'https://i.postimg.cc/mk9YPNJR/cm-punk-lightning-bolt-fist-red-logo-by-darkvoidpictures-dcx9i6l.png' },
-          { src: 'https://i.postimg.cc/mk9YPNJR/cm-punk-lightning-bolt-fist-red-logo-by-darkvoidpictures-dcx9i6l.png' },
-          { src: 'https://i.postimg.cc/mk9YPNJR/cm-punk-lightning-bolt-fist-red-logo-by-darkvoidpictures-dcx9i6l.png' },
-          { src: 'https://i.postimg.cc/mk9YPNJR/cm-punk-lightning-bolt-fist-red-logo-by-darkvoidpictures-dcx9i6l.png' },
-          { src: 'https://i.postimg.cc/mk9YPNJR/cm-punk-lightning-bolt-fist-red-logo-by-darkvoidpictures-dcx9i6l.png' },
-          { src: 'https://i.postimg.cc/mk9YPNJR/cm-punk-lightning-bolt-fist-red-logo-by-darkvoidpictures-dcx9i6l.png' },
-          { src: 'https://i.postimg.cc/mk9YPNJR/cm-punk-lightning-bolt-fist-red-logo-by-darkvoidpictures-dcx9i6l.png' },
-          { src: 'https://i.postimg.cc/mk9YPNJR/cm-punk-lightning-bolt-fist-red-logo-by-darkvoidpictures-dcx9i6l.png' },
-          { src: 'https://i.postimg.cc/mk9YPNJR/cm-punk-lightning-bolt-fist-red-logo-by-darkvoidpictures-dcx9i6l.png' }
+          { src: 'https://i.postimg.cc/TYWK64hG/mens-black-stone-cold-steve-austin-kotr-1996-interview-t-shirt-pi4906000-ff-4906624-e67dfb71d098e98d.jpg' },
+          { src: 'https://i.postimg.cc/Bn4PBCQ0/mens-ripple-junction-heather-red-bret-hart-hitman-t-shirt-ss5-p-200071754-pv-2-u-qr0qffk56nvzgu2iiky.jpg' },
+          { src: 'https://i.postimg.cc/15LNVZbf/mens-black-bret-hart-hitman-fleece-pullover-hoodie-ss5-p-200119505-pv-2-u-xf2kfwtzp9tp12qtxvn9-v-rfc.jpg' },
+          { src: 'https://i.postimg.cc/TPxLQJdx/mens-black-stone-cold-steve-austin-adjustable-hat-ss5-p-5291626-pv-1-u-e34amwfmxofglp59lp2b-v-ildb9a.jpg' },
+          { src: 'https://i.postimg.cc/7P535Xbt/mens-black-the-usos-penitentiary-snapback-hat-ss5-p-200395990-pv-2-u-ayrchzziooixpiaivxeb-v-jle2xatl.jpg' },
+          { src: 'https://i.postimg.cc/8CJJZ43x/mens-black-stone-cold-steve-austin-half-skull-t-shirt_pi4900000_ff_4900893-bc2dc40ae516f9ae61b1_full.webp' },
+          { src: 'https://i.postimg.cc/7hD5Yk6y/aew1947-1-punk.png' },
+          { src: 'https://i.postimg.cc/W4BDCrcz/aew2174-1-cmpunk-sting-sting.png' },
+          { src: 'https://i.postimg.cc/MKYC2DrC/WWE_Winged_Eagle_Dual_Plated_Championship_Replica_Title_Belt.jpg' }
         ],
         isDragStart: false,
         isDragging: false,
@@ -83,24 +83,34 @@
         this.$refs.carousel.scrollLeft = this.prevScrollLeft - this.positionDiff;
         this.showHideIcons();
       },
+      
       dragStop() {
-        this.isDragStart = false;
-        this.$refs.carousel.classList.remove("dragging");
-  
-        if (!this.isDragging) return;
-        this.isDragging = false;
-        this.autoSlide();
-      },
+      this.isDragStart = false;
+      this.$refs.carousel.classList.remove("dragging");
+
+      if (!this.isDragging) return;
+      this.isDragging = false;
+      this.autoSlide();
+    },
+
       clickImage(index) {
         // Handle click on an image if needed
       }
     },
+
     mounted() {
-      window.addEventListener("mousemove", this.dragging);
-      this.$refs.carousel.addEventListener("touchmove", this.dragging);
-      window.addEventListener("mouseup", this.dragStop);
-      this.$refs.carousel.addEventListener("touchend", this.dragStop);
-    }
+    window.addEventListener("mousemove", this.dragging);
+    this.$refs.carousel.addEventListener("touchmove", this.dragging);
+    window.addEventListener("mouseup", this.dragStop);
+    this.$refs.carousel.addEventListener("touchend", this.dragStop);
+  },
+
+  beforeDestroy() {
+    window.removeEventListener("mousemove", this.dragging);
+    this.$refs.carousel.removeEventListener("touchmove", this.dragging);
+    window.removeEventListener("mouseup", this.dragStop);
+    this.$refs.carousel.removeEventListener("touchend", this.dragStop);
+  }
   };
   </script>
   
@@ -125,7 +135,10 @@ h1{
   text-align: center;
   line-height: 44px;
   background: #fff;
-  filter: drop-shadow(-5px 30px 28px #000);
+  /* font-size: 15px; */
+  font-weight: 700;
+  /* filter: drop-shadow(-5px 30px 28px #000); */
+  box-shadow: 0 18px 40px rgba(180, 177, 177, 0.70);
   border-radius: 50%;
   transform: translateY(-50%);
   transition: transform 0.1s linear;
