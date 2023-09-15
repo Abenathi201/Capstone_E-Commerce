@@ -381,7 +381,6 @@ export default createStore({
       console.log("User Data", userData);
 
       const userID = context.state.userData?.result?.userID;
-      console.log('userID:', userID);
     
       if (userID) {
         try {
