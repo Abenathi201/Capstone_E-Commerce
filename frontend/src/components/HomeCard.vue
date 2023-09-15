@@ -83,7 +83,7 @@
         this.$refs.carousel.scrollLeft = this.prevScrollLeft - this.positionDiff;
         this.showHideIcons();
       },
-      
+
       dragStop() {
       this.isDragStart = false;
       this.$refs.carousel.classList.remove("dragging");
@@ -117,7 +117,7 @@
 <style scoped>
 .card {
   display: flex;
-  max-width: 1200px;
+  max-width: 1100px;
   position: relative;
 }
 

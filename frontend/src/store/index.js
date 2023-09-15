@@ -296,6 +296,7 @@ export default createStore({
       context.commit("setToken", data.token);
       context.commit("setUserData", userData);
       context.commit("setUserRole", data.result.userRole);
+      router.push("/")
 
       return data;
       } else {
@@ -369,6 +370,7 @@ export default createStore({
       
       localStorage.removeItem('userData');
       localStorage.removeItem('accessToken');
+      router.push("/")
     
       Cookies.remove("userToken", { path: "/" });
       Cookies.remove("userData", { path: "/" });

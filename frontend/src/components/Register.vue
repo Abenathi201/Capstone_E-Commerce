@@ -61,6 +61,7 @@
 </template>
 
 <script>
+import router from '@/router';
 export default {
   data() {
     return {
@@ -90,6 +91,7 @@ export default {
         profileUrl: this.users.profileUrl
       };
       this.$store.dispatch("registerUser", user);
+      router.push("/login")
       console.log(this.$store.state.token);
     }
   },
@@ -97,29 +99,13 @@ export default {
 </script>
 
 <style scoped>
-/* @import url("https://fonts.googleapis.com/css2?family=Poppins&display=swap");
-
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  font-family: "Poppins", sans-serif;
-  outline-color: #a5b4fc;
-}
-
-body {
-  min-height: 100vh;
-  display: grid;
-  place-items: center;
-  background-color: #e2e8f0;
-} */
-
 p {
   font-size: 14px;
   color: #6b7280;
 }
 
 .signup-form {
+  margin-top: 200px;
   width: 480px;
   padding: 32px;
   top: 50%;
