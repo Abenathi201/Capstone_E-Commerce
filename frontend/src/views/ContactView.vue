@@ -1,7 +1,7 @@
 <template>
     <div class="contact">
     
-        <div class="form">
+        <form class="form" action="https://formspree.io/f/maygyqgw" method="POST">
             <h1>CONTACT US</h1>
             <p> 
                 Do you want to get started with your shopping and you need <br>
@@ -20,7 +20,7 @@
             <button>
                 Send Message
             </button>
-        </div>
+        </form>
 
         <!-- <div class="subscribe">
             <h1>Subscribe to our Newsletter</h1>
