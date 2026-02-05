@@ -4,12 +4,14 @@ const { createToken } = require('../middleware/AuthenticateUsers');
 class Users{
     getUsers(req, res) {
         const query = `
-        SELECT userID, firstName, lastName, 
+        SELECT userID, firstName, lastName,
         gender, userDOB, userRole, emailAdd, profileUrl
         FROM Users;
         `
         db.query(query, (err, results)=>{
-            if(err) throw err 
+            if(err) {
+                return res.status(500).json({ status: 500, msg: 'Database error' });
+            }
             res.json({
                 status: res.statusCode,
                 results
@@ -19,13 +21,15 @@ class Users{
 
     getUser(req, res) {
         const query = `
-        SELECT userID, firstName, lastName, 
+        SELECT userID, firstName, lastName,
         gender, userDOB, userRole, emailAdd, profileUrl
         FROM Users
-        WHERE userID = ${req.params.id};
+        WHERE userID = ?;
         `
-        db.query(query, (err, result)=>{
-            if(err) throw err 
+        db.query(query, [req.params.id], (err, result)=>{
+            if(err) {
+                return res.status(500).json({ status: 500, msg: 'Database error' });
+            }
             res.json({
                 status: res.statusCode,
                 result
@@ -39,27 +43,24 @@ class Users{
         if (!data.userPass) {
           return res.json({ status: res.statusCode, msg: "Password is required." });
         }
-      
+
       // Encrypt password
       data.userPass = await hash(data.userPass, 15);
-        
-        const user = {
-          emailAdd: data.emailAdd,
-          userPass: data.userPass
-        };
-        
+
         //query
         const query = `
           INSERT INTO Users
-          SET ?; 
+          SET ?;
           `
-        db.query(query, [data], (err) => {
-          if (err) throw err;
-          //create a token
-          let token = createToken(user);
+        db.query(query, [data], (err, result) => {
+          if (err) {
+            return res.status(500).json({ status: 500, msg: 'Database error' });
+          }
+          const token = createToken({ emailAdd: data.emailAdd, userID: result.insertId, userRole: data.userRole || 'user' });
           res.json({
             status: res.statusCode,
             msg: "You are now registered.",
+            token
           })
         })
     }
@@ -67,28 +68,31 @@ class Users{
     // Login with a user
     login(req, res) {
       const { emailAdd, userPass } = req.body;
-    
+
       const query = `
         SELECT userID, firstName, lastName,
         gender, userDOB, userRole, emailAdd,
         userPass, profileUrl
         FROM Users
-        WHERE emailAdd = '${emailAdd}';
+        WHERE emailAdd = ?;
       `;
-    
-      db.query(query, async (err, result) => {
-        if (err) throw err;
-    
+
+      db.query(query, [emailAdd], async (err, result) => {
+        if (err) {
+            return res.status(500).json({ status: 500, msg: 'Database error' });
+        }
+
         if (!result?.length) {
           res.json({ status: res.statusCode, msg: "You provided a wrong email." });
         } else {
           compare(userPass, result[0].userPass, (compareErr, compareResult) => {
-            if (compareErr) throw compareErr;
-    
+            if (compareErr) {
+                return res.status(500).json({ status: 500, msg: 'Authentication error' });
+            }
+
             if (compareResult) {
-              // const authenticated = true;
-              const token = createToken({ emailAdd, userPass });
-    
+              const token = createToken({ emailAdd, userID: result[0].userID, userRole: result[0].userRole });
+
               res.json({ msg: "Logged in", token, result: result[0] });
             } else {
               res.json({ status: res.statusCode, msg: "Invalid password or you have not registered" });
@@ -111,10 +115,9 @@ class Users{
           `
       db.query(query, [data, req.params.id], (err) => {
         if (err) {
-          throw err
-      } else {
-          res.json({ status: res.statusCode, msg: "The user record was updated." });
-      }
+            return res.status(500).json({ status: 500, msg: 'Database error' });
+        }
+        res.json({ status: res.statusCode, msg: "The user record was updated." });
       });
     }
 
@@ -122,14 +125,13 @@ class Users{
     deleteUser(req, res) {
       const query = `
       DELETE FROM Users
-      WHERE userID = ${req.params.id};
+      WHERE userID = ?;
       `
-      db.query(query, (err) => {
+      db.query(query, [req.params.id], (err) => {
           if(err) {
-              throw err
-          } else {
-              res.json({ status: res.statusCode, msg: "User deleted!" })
-          } 
+              return res.status(500).json({ status: 500, msg: 'Database error' });
+          }
+          res.json({ status: res.statusCode, msg: "User deleted!" })
       })
     } 
 }

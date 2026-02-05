@@ -10,10 +10,9 @@ class Products {
         `
         db.query(query, (err, results) => {
             if(err) {
-                throw err
-            } else {
-                res.json({  status: res.statusCode, results  });
+                return res.status(500).json({ status: 500, msg: 'Database error' });
             }
+            res.json({ status: res.statusCode, results });
         })
     }
 
@@ -23,30 +22,28 @@ class Products {
         SELECT productID, productName, productPrice,
         imageURL, description, quantity, Categories
         FROM Products
-        WHERE productID = ${req.params.id};
-        ` 
-        db.query(query, (err, result) => {
+        WHERE productID = ?;
+        `
+        db.query(query, [req.params.id], (err, result) => {
             if (err) {
-                throw err
-            } else {
-                res.json({ status: res.statusCode, result });
+                return res.status(500).json({ status: 500, msg: 'Database error' });
             }
-        })  
+            res.json({ status: res.statusCode, result });
+        })
     }
 
     // Add a product
     addProduct(req, res) {
-        const data = req.body 
+        const data = req.body
         const query = `
         INSERT INTO Products
         SET ?;
         `
-        db.query(query,[data], (err) => {
+        db.query(query, [data], (err) => {
             if(err) {
-                throw err
-            } else {
-                res.json({ status: res.statusCode, msg: "Product added!" })
+                return res.status(500).json({ status: 500, msg: 'Database error' });
             }
+            res.json({ status: res.statusCode, msg: "Product added!" })
         })
     }
 
@@ -55,30 +52,13 @@ class Products {
         const query = `
         UPDATE Products
         SET ?
-        WHERE productID = ${req.params.id};
-        `
-        db.query(query, [req.body], (err) => {
-                if(err) {
-                    throw err
-                } else {
-                    res.json({ status: res.statusCode, msg: "Product updated!" })
-            }
-        })
-    }
-
-    // Patch product
-    patchProduct(req, res) {
-        const query = `
-        UPDATE Products
-        SET ?
         WHERE productID = ?;
         `
-        db.query(query, [data, id], (err) => {
+        db.query(query, [req.body, req.params.id], (err) => {
             if(err) {
-                throw err
-            } else {
-                res.json({ status: res.statusCode, msg: "Product updated!" })
+                return res.status(500).json({ status: 500, msg: 'Database error' });
             }
+            res.json({ status: res.statusCode, msg: "Product updated!" })
         })
     }
 
@@ -86,14 +66,13 @@ class Products {
     deleteProduct(req, res) {
         const query = `
         DELETE FROM Products
-        WHERE productID = ${req.params.id};
+        WHERE productID = ?;
         `
-        db.query(query, (err) => {
+        db.query(query, [req.params.id], (err) => {
             if(err) {
-                throw err
-            } else {
-                res.json({ status: res.statusCode, msg: "Product deleted!" })
-            } 
+                return res.status(500).json({ status: 500, msg: 'Database error' });
+            }
+            res.json({ status: res.statusCode, msg: "Product deleted!" })
         })
     }
 }

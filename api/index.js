@@ -1,19 +1,25 @@
-const {express, routes} = require('./controllers')
+const express = require('express')
 const cookieParser = require('cookie-parser')
-const path = require('path')
 const cors = require('cors')
+const routes = require('./routes')
+const ErrorHandling = require('./middleware/ErrorHandling')
+
 const app = express()
 const port = +process.env.PORT || 5000
 
-app.use(
-    express.static('./static'),
-    express.urlencoded({
-        extended: false
-    }),
-    cookieParser(),
-    cors(),
-    routes
-)
-app.listen(port, ()=>{
-    console.log(`Server is running on port ${port}`);
-} )
+// Middleware
+app.use(express.static('./static'))
+app.use(express.json())
+app.use(express.urlencoded({ extended: false }))
+app.use(cookieParser())
+app.use(cors())
+
+// Routes
+app.use(routes)
+
+// Error handling middleware (must be last)
+app.use(ErrorHandling)
+
+app.listen(port, () => {
+    console.log(`Server is running on port ${port}`)
+})
